@@ -2,7 +2,6 @@
 
 
 
-
 var InsertionSort = A => {
   for (let j = 1; j < A.length; j++) {
     let key = A[j]; // store the element to be moved
@@ -22,6 +21,7 @@ var InsertionSort = A => {
   return A;
 };
 
+// Loop Invariant: At the start of each iteration, the subarray A[0...j-1] is sorted
 // Complexity: O(n^2) worst case when the array is reverse sorted, O(1) space
 // Best case O(n) when the array is already sorted
 
