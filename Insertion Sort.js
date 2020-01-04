@@ -1,7 +1,5 @@
 //Concept: For every element A[j] of your array, check all the elements on its left, and place it on the ideal position i, while at the same time moving all the bigger elements one position to their right in order to make space for the insertion of your element A[j] that you're about to place.
 
-
-
 var InsertionSort = A => {
   for (let j = 1; j < A.length; j++) {
     let key = A[j]; // store the element to be moved
@@ -11,7 +9,7 @@ var InsertionSort = A => {
     while (i > 0 && A[i] > key) {
       //Since you intend to insert your key at its rightful position that lies
       // on the left of j, you need to move all the other elements one side to the right
-      A[i + 1] = A[i]; //so that you can place your key 
+      A[i + 1] = A[i]; //so that you can place your key
       i--;
     }
     // When you reach this step, you do have the ideal position i that holds the first smaller element you came across
