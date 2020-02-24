@@ -2,7 +2,8 @@
 // requirements : Positive Integers as elements
 // relatively small range
 
-
+// Complexity O(n+k) time where k is the range of the input(the max element)
+// O(n+k) space, the frequency array depends on k
 let countingSort=A=>{
 
     //1st. find the biggest element of A
