@@ -32,6 +32,10 @@ var MergeSort=A=>{
         console.log('started with',A+'')
         console.log('broken into',LEFT,RIGHT)
 
+
+        // loop invariant: At the start of each iteration of this for loop, the 
+        // subarray A[p...k-1] contains the smallest sorted elements  of L and R
+        // which are the k-p first sorted elements of the subarray A[p..r]
         for (let k = p,i=0,j=0; k<=r; k++) {
             // produce the sorted array without needing extra space
             if(LEFT[i]<=RIGHT[j]){
@@ -64,10 +68,9 @@ var MergeSort=A=>{
 
     return A
 }
-
-// Loop Invariant: 
+// Runtime Θ(nlogn) through Master Theorem
 
 
 console.log(MergeSort(
     [1,23,1,5,6,12,3,1]
-))
+)) 

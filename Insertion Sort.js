@@ -23,6 +23,20 @@ var InsertionSort = A => {
 // Complexity: O(n^2) worst case when the array is reverse sorted, O(1) space
 // Best case O(n) when the array is already sorted
 
+
+// 2.3-4 Expressing insertion sort as recurrence
+
+var InsertionSort=A=>{
+
+  let recurrence=(start,end)=>{
+
+  }
+  
+
+  recurrence(1,n)
+  return A
+}
+
 console.log(
   InsertionSort([
     1,
