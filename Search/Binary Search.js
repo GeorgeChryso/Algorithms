@@ -5,7 +5,6 @@
 
 
 
-
 // Complexity O(logn)
 let binarySearch=(A,Target)=>{
     let L=0
