@@ -25,6 +25,7 @@ class BinaryHeap{
         while(this.hasParent(index)&&(this.heap[index]<this.getParent(index))){
             //swap the two elements until the Invariant is reached
             [this.heap[index],this.heap[Math.floor((index-1)/2)]]= [this.heap[Math.floor((index-1)/2)],this.heap[index]]
+            // and update the new index to be its parent's index, since u switched the items
             index=Math.floor((index-1)/2)
         }
     }
