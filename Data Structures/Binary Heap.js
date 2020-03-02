@@ -18,10 +18,13 @@ class BinaryHeap{
 
     push(element){
         this.heap.push(element)
+        //this element is pushed on the rightmost node of the lowest level
+        // and needs  to be bubbled up accordingly
         this.bubbleUp(this.heap.length-1)
     }
 
     bubbleUp(index){
+        //if there is a parent with a bigger priority, switch places with my index
         while(this.hasParent(index)&&(this.heap[index]<this.getParent(index))){
             //swap the two elements until the Invariant is reached
             [this.heap[index],this.heap[Math.floor((index-1)/2)]]= [this.heap[Math.floor((index-1)/2)],this.heap[index]]
@@ -37,21 +40,26 @@ class BinaryHeap{
         this.bubbleDown(0)
         return result
     }
-
+    
+    //after every poll, the new item on place 0 needs to be bubbled down to its correct position
     bubbleDown(index){
         while(this.hasLeft(index)&&(this.heap[index]>this.getLeftChild(index)||(this.hasRight(index)&&this.heap[index]>this.getRightChild(index)) )){
 
+            //if there is no right child, swap with the left
             if(!this.hasRight(index)){
                 [this.heap[index],this.heap[index*2+1]]=[this.getLeftChild(index),this.heap[index]]
                 index=index*2+1
             }
             else{
-
+                // if the left child is less than or equal to the right child, choos the left
                 if(this.getLeftChild(index)<=this.getRightChild(index)){
+                    //and swap
                   [this.heap[index],this.heap[index*2+1]]=[this.getLeftChild(index),this.heap[index]]
                   index=index*2+1
                 }
+                // else choose the right child
                 else {
+                    //and swap
                   [this.heap[index],this.heap[index*2+2]]=[this.getRightChild(index),this.heap[index]]
                   index=index*2+2  
                 }
