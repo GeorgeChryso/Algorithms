@@ -17,7 +17,7 @@ var InsertionSort = A => {
       A[i + 1] = key; //  therefore you need to place your element after its first smaller element A[i]
     }
   
-    return A;
+    return A; 
 };
 
 let bucketSort=A=>{

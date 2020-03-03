@@ -24,6 +24,8 @@ class minBinaryHeap{
     
     length=()=>this.heap.length
 
+    peek=()=>this.heap[0]
+
     push(element){
         this.heap.push(element)
         //this element is pushed on the rightmost node of the lowest level
@@ -100,14 +102,13 @@ console.log(hp.heap)
 class maxBinaryHeap{
     constructor(){
         this.heap=[]
+        this.comparator=(a,b)=>b-a
     }
 
     hasParent=index=>index>=1
     getParent=(index)=>this.heap[Math.floor((index-1)/2)]
-    
     hasLeft=(index)=>2*index+1<=this.heap.length-1
     getLeftChild=(index)=>this.heap[2*index+1]
-    
     hasRight=index=>2*index+2<=this.heap.length-1
     getRightChild=(index)=> this.heap[2*index+2]
     
@@ -122,7 +123,7 @@ class maxBinaryHeap{
 
     bubbleUp(index){
         //if there is a parent with a bigger priority, switch places with my index
-        while(this.hasParent(index)&&(this.heap[index]>this.getParent(index))){
+        while(this.hasParent(index)&&(this.comparator(this.heap[index],this.getParent(index))>0)){
             //swap the two elements until the Invariant is reached
             [this.heap[index],this.heap[Math.floor((index-1)/2)]]= [this.heap[Math.floor((index-1)/2)],this.heap[index]]
             // and update the new index to be its parent's index, since u switched the items
@@ -143,8 +144,8 @@ class maxBinaryHeap{
     //after every poll, the new item on place 0 needs to be bubbled down to its correct position
     bubbleDown(index){
         if(this.length()<=1)return
-
-        while(this.hasLeft(index)&&(this.heap[index]<this.getLeftChild(index)||(this.hasRight(index)&&this.heap[index]<this.getRightChild(index)) )){
+       
+        while(this.hasLeft(index)&&( this.comparator(this.heap[index],this.getLeftChild(index))<0||(this.hasRight(index)&&this.comparator(this.heap[index],this.getRightChild(index))<0) )){
 
             //if there is no right child, swap with the left
             if(!this.hasRight(index)){
@@ -153,7 +154,8 @@ class maxBinaryHeap{
             }
             else{
                 // if the left child is less than or equal to the right child, choos the left
-                if(this.getLeftChild(index)>=this.getRightChild(index)){
+   
+                if(this.comparator(this.getLeftChild(index),this.getRightChild(index))>=0){
                     //and swap
                   [this.heap[index],this.heap[index*2+1]]=[this.getLeftChild(index),this.heap[index]]
                   index=index*2+1
@@ -168,6 +170,13 @@ class maxBinaryHeap{
             }
         }
     }
+
+    heapify() {
+        if (this.length() < 2) return;
+        for (let i = 1; i < this.length(); i++) {
+          this.bubbleUp(i);
+        }
+      }
 }
 
 
@@ -194,7 +203,7 @@ class MaxHeap {
     }
   
     // O(log(n))
-    offer(value) {
+    push(value) {
       this.data.push(value);
       this.bubbleUp(this.size() - 1);
     }
@@ -261,7 +270,7 @@ class MaxHeap {
     }
   
     // O(1)
-    size() {
+    length() {
       return this.data.length;
     }
   }
