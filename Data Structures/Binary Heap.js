@@ -274,3 +274,7 @@ class MaxHeap {
       return this.data.length;
     }
   }
+
+
+  // I can implement a priority queue through Binary Search Trees aswell
+  
