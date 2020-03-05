@@ -1,6 +1,6 @@
 // Binary heap is the implementation of the Priority Queue A.D.T.
 
-//minHeap
+//minheap
 class minBinaryHeap{
     constructor(){
         this.heap=[]
@@ -37,7 +37,7 @@ class minBinaryHeap{
         //if there is a parent with a bigger priority, switch places with my index
         while(this.hasParent(index)&&(this.comparator(this.heap[index],this.getParent(index))<0)){
             //swap the two elements until the Invariant is reached
-            [this.heap[index],this.heap[Math.floor((index-1)/2)]]= [this.heap[Math.floor((index-1)/2)],this.heap[index]]
+            this.swap(index,Math.floor((index-1)/2))
             // and update the new index to be its parent's index, since u switched the items
             index=Math.floor((index-1)/2)
         }
@@ -61,28 +61,34 @@ class minBinaryHeap{
 
             //if there is no right child, swap with the left
             if(!this.hasRight(index)){
-                [this.heap[index],this.heap[index*2+1]]=[this.getLeftChild(index),this.heap[index]]
+                this.swap(index,index*2+1)
                 index=index*2+1
             }
             else{
                 // if the left child is less than or equal to the right child, choos the left
                 if(this.comparator(this.getLeftChild(index),this.getRightChild(index))<=0){
                     //and swap
-                  [this.heap[index],this.heap[index*2+1]]=[this.getLeftChild(index),this.heap[index]]
-                  index=index*2+1
+                    this.swap(index,index*2+1)
+                    index=index*2+1
                 }
                 // else choose the right child
                 else {
                     //and swap
-                  [this.heap[index],this.heap[index*2+2]]=[this.getRightChild(index),this.heap[index]]
-                  index=index*2+2  
+                  this.swap(index,index*2+2)
+                  index=index*2+1
+
                 }
                 
             }
         }
     }
+    swap=(a,b)=>{
+        if(a===b)return
+        let temp=this.heap[b]
+        this.heap[b]=this.heap[a]
+        this.heap[a]=temp
+    }
 }
-
 
 
 let hp=new minBinaryHeap()
