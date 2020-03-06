@@ -1,4 +1,55 @@
 
+
+// unidirectional input
+// src='A', Target='C', distances=[[A,B,1], [A,C,0],[C,K,2],...]
+let dijkstras=(src,Target,distances)=>{
+
+    //source: [distances[i]]
+    let connections={}
+    //key:node name, val: its dist from source node
+    let finalizedDist={}
+    let sptSet=new Set() //all the nodes,whose minimum distance from source
+    // is finalized.
+
+    console.log(src,Target,distances)
+    for (const [source,tar,cost] of distances) {
+         connections[source]==undefined?connections[source]=[[source,tar,cost]]:connections[source].push([source,tar,cost])
+         finalizedDist[source]=Infinity    //populate distance for n nodes
+
+    }
+ 
+    let priorityQueue=new minBinaryHeap()
+    priorityQueue.comparator=(a,b)=>a[2]-b[2]
+
+    priorityQueue.push([src,src,0])
+    finalizedDist[src]=0
+
+  
+    let totalNodes=Object.keys(connections).length
+
+    while(sptSet.size!==totalNodes){
+        let currentElement=priorityQueue.poll()
+        while(sptSet.has(currentElement[1])&&priorityQueue.heap.length!==0){
+            currentElement=priorityQueue.poll()
+        }
+        sptSet.add(currentElement[1])
+
+        for (const [cur,to,cost] of connections[currentElement[1]]) {
+            priorityQueue.push([cur,to,cost])
+            if(finalizedDist[cur]+cost<finalizedDist[to]){
+                finalizedDist[to]=finalizedDist[cur]+cost
+            }
+        }
+        console.log(finalizedDist,currentElement,sptSet)
+
+    }
+
+    return finalizedDist[Target]
+}
+
+
+
+
 //minHeap
 class minBinaryHeap{
     constructor(){
@@ -74,7 +125,7 @@ class minBinaryHeap{
                 else {
                     //and swap
                   this.swap(index,index*2+2)
-                  index=index*2+1
+                  index=index*2+2
 
                 }
                 
@@ -89,57 +140,6 @@ class minBinaryHeap{
     }
 }
 
-
-
-// unidirectional input
-// src='A', Target='C', distances=[[A,B,1], [A,C,0],[C,K,2],...]
-let dijkstras=(src,Target,distances)=>{
-
-    //source: [distances[i]]
-    let connections={}
-    //key:node name, val: its dist from source node
-    let finalizedDist={}
-    let sptSet=new Set() //all the nodes,whose minimum distance from source
-    // is finalized.
-
-    console.log(src,Target,distances)
-    for (const [source,tar,cost] of distances) {
-         connections[source]==undefined?connections[source]=[[source,tar,cost]]:connections[source].push([source,tar,cost])
-         finalizedDist[source]=Infinity    //populate distance for n nodes
-
-    }
- 
-    let priorityQueue=new minBinaryHeap()
-    priorityQueue.comparator=(a,b)=>a[2]-b[2]
-
-    priorityQueue.push([src,src,0])
-    finalizedDist[src]=0
-
-  
-    let totalNodes=Object.keys(connections).length
-
-    while(sptSet.size!==totalNodes){
-        let currentElement=priorityQueue.poll()
-        while(sptSet.has(currentElement[1])&&priorityQueue.heap.length!==0){
-            currentElement=priorityQueue.poll()
-        }
-        sptSet.add(currentElement[1])
-
-        for (const [cur,to,cost] of connections[currentElement[1]]) {
-            priorityQueue.push([cur,to,cost])
-            if(finalizedDist[cur]+cost<finalizedDist[to]){
-                finalizedDist[to]=finalizedDist[cur]+cost
-            }
-        }
-        console.log(finalizedDist,currentElement,sptSet)
-
-    }
-
-    return finalizedDist[Target]
-}
-
-
-//input
 
 
 

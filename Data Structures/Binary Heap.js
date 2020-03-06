@@ -75,7 +75,7 @@ class minBinaryHeap{
                 else {
                     //and swap
                   this.swap(index,index*2+2)
-                  index=index*2+1
+                  index=index*2+2
 
                 }
                 
