@@ -40,7 +40,10 @@ var dijkstras=(src,Target,distances)=>{
                 finalizedDist[to]=finalizedDist[cur]+cost
             }
         }
-
+        
+         //stop early optimization, If the target node is processed I can end it as the distance is not going to change
+        // BUT, THE REST OF THE NODES ARE NOT OPTIMIZED
+        // if(currentElement[0]===Target)return finalizedDist[Target]
     }
 
     return finalizedDist[Target]
@@ -185,6 +188,9 @@ var dijkstras=(src,Target,distances)=>{
             }
         }
 
+        //stop early optimization, If the target node is processed I can end it as the distance is not going to change
+        // BUT, THE REST OF THE NODES ARE NOT OPTIMIZED
+        // if(currentElement[0]===Target)return finalizedDist[Target]
     }
 
     //actually, I m essentially reversing the order of the previous array starting from my target
