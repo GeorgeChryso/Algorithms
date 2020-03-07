@@ -15,7 +15,7 @@ let dijkstras=(src,Target,distances)=>{
     for (const [source,tar,cost] of distances) {
          connections[source]==undefined?connections[source]=[[source,tar,cost]]:connections[source].push([source,tar,cost])
          finalizedDist[source]=Infinity    //populate distance for n nodes
-
+         finalizedDist[tar]=Infinity
     }
  
     let priorityQueue=new minBinaryHeap()

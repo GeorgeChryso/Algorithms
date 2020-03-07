@@ -17,20 +17,38 @@ let BellmanFord=(src,target,edges)=>{
     //Number of Nodes
     let N=Object.keys(distanceFromSource).length
 
-
+    // main
     for (let i = 1; i <=N-1; i++) {
         for (const [start,end,cost] of edges) {
+
+            if(distanceFromSource[start]===Infinity)continue
             if( distanceFromSource[start]+cost<distanceFromSource[end]){
                 distanceFromSource[end]=distanceFromSource[start]+cost
             }
         }
     }
 
+
+
+    //you can check for a potential negative cycle  
+    checkNegativeCycles(distanceFromSource,edges)
+
+
     return distanceFromSource[target]
 
 }
 
 
+
+let checkNegativeCycles=(distances,edges)=>{
+
+    for (const [start,end,cost] of edges) {
+        //if we can find a better (smaller) distance by using one of the edges, then there is a negative cycle, which is NO BUENO cos Bellman doesnt work for negative Cycles
+        if(distances[start]!==Infinity && distances[start]+cost<distances[end])return true
+    }
+
+    return false
+}
 
 
 
