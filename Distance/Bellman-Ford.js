@@ -5,11 +5,14 @@
 // N= number of nodes E=number of edges
 let BellmanFord=(src,target,edges)=>{
     let distanceFromSource={}
-
+    //only if i want to find the path aswell
+    let prev={}
     //initialize the distance of every node with Infinity
     for (const [start,end,cost] of edges) {
         distanceFromSource[start]=Infinity
         distanceFromSource[end]=Infinity
+        prev[start]=Infinity
+        prev[end]=Infinity
     }
 
     distanceFromSource[src]=0
@@ -24,6 +27,7 @@ let BellmanFord=(src,target,edges)=>{
             if(distanceFromSource[start]===Infinity)continue
             if( distanceFromSource[start]+cost<distanceFromSource[end]){
                 distanceFromSource[end]=distanceFromSource[start]+cost
+                prev[end]=start
             }
         }
     }
@@ -32,7 +36,20 @@ let BellmanFord=(src,target,edges)=>{
 
     //you can check for a potential negative cycle  
     checkNegativeCycles(distanceFromSource,edges)
+    // you can also find the path for the required node 
+    let findPath=()=>{
+        if(distanceFromSource[target]==Infinity)return false
 
+        let path=[target]
+        let currkey=target
+        while(prev[currkey]!=Infinity){
+            path.unshift(prev[currkey])
+            currkey=prev[currkey]
+        }
+        console.log(path)
+        return path
+    }
+    findPath()
 
     return distanceFromSource[target]
 
@@ -49,6 +66,7 @@ let checkNegativeCycles=(distances,edges)=>{
 
     return false
 }
+
 
 
 
