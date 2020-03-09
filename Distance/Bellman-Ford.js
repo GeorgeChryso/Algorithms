@@ -23,7 +23,6 @@ let BellmanFord=(src,target,edges)=>{
     // main
     for (let i = 1; i <=N-1; i++) {
         for (const [start,end,cost] of edges) {
-
             if(distanceFromSource[start]===Infinity)continue
             if( distanceFromSource[start]+cost<distanceFromSource[end]){
                 distanceFromSource[end]=distanceFromSource[start]+cost
