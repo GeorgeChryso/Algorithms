@@ -5,8 +5,6 @@
 
 
 // just Adjacency Matrix- No heap. O(V**2)
-
-
 var Prims=(Edges)=>{
     let Adjacency={}
     for (const [source,to,cost] of Edges) {
@@ -31,6 +29,8 @@ var Prims=(Edges)=>{
 
 
     let keys={} //determines what node will be processed next
+    // essentially saves the distance from a visited note to an unvisited one
+    // The unvisited key with the minimum distance will be processed next during my for loop
     let Parents={} //helps with the final representatio nof my MST
 
     //Initialize both keys and Parents
