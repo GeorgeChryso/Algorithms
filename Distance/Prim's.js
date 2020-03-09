@@ -11,42 +11,70 @@ var Prims=(Edges)=>{
     let Adjacency={}
     for (const [source,to,cost] of Edges) {
         if(Adjacency[source]===undefined){
-            Adjacency[source]=[[to,cost]]
+            Adjacency[source]={}
+            Adjacency[source][to]=cost
         }
         else{
-            Adjacency[source].push([to,cost])
+            Adjacency[source][to]=cost
+
         }
-        
         if(Adjacency[to]===undefined){
-            Adjacency[to]=[[source,cost]]
+            Adjacency[to]={}
+            Adjacency[to][source]=cost
         }
         else{
-            Adjacency[to].push([source,cost])
+            Adjacency[to][source]=cost
         }
     }
+    let totalNodes=Object.keys(Adjacency).length
 
+
+
+    let keys={}
+    let Parents={}
+    Object.keys(Adjacency).forEach(d=>{
+        keys[d]=Infinity
+        Parents[d]=null
+    })
+    
 
 
     let visited=new Set()
     //add a random node to visited to start the process
-    visited.add(Object.keys(Adjacency)[0])
-    console.log(Adjacency)
-    let result=[]
-    while(visited.size!==Object.keys(Adjacency).length){
+    keys[Object.keys(keys)[0]]=0
+    let result=[]  
 
-        let minEntry=[Infinity,Infinity,Infinity]
+
+    
+    for (let count = 0; count < totalNodes-1; count++) {
         
-        for (const vis of visited.values()) {
-            for (const [to,cost] of Adjacency[vis]) {
-                if(!visited.has(to)&&cost<minEntry[2]){
-                    minEntry=[vis,to,cost]
-                }
+
+        //findminKey
+        let min=Infinity
+        let minKey=-1
+        for (const key in keys) {
+            if(!visited.has(key)&&keys[key]<min){
+                min=keys[key]
+                minKey=key
             }
         } 
+        visited.add(minKey)
 
-        visited.add(minEntry[1])
-        result.push(minEntry)
+        if(min===Infinity)break
+
+        for (const vertex in keys) {
+            if(!visited.has(vertex)&&Adjacency[minKey][vertex]<keys[vertex]){
+                keys[vertex]=Adjacency[minKey][vertex]
+                Parents[vertex]=minKey
+            }
+        }
+
     }
+        
+    console.log(Parents,keys)
+
+
+    
 
     return result
 }
