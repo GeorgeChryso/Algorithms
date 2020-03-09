@@ -30,26 +30,31 @@ var Prims=(Edges)=>{
 
 
 
-    let keys={}
-    let Parents={}
+    let keys={} //determines what node will be processed next
+    let Parents={} //helps with the final representatio nof my MST
+
+    //Initialize both keys and Parents
     Object.keys(Adjacency).forEach(d=>{
         keys[d]=Infinity
         Parents[d]=null
     })
     
 
-
-    let visited=new Set()
-    //add a random node to visited to start the process
+    //pick randomly the first Key and set its keys' value to 0 in order for it 
+    // to be picked first inside the for loop
     keys[Object.keys(keys)[0]]=0
     let result=[]  
 
 
-    
+    let visited=new Set()
+
     for (let count = 0; count < totalNodes-1; count++) {
         
 
-        //findminKey
+        // finds the key which has the minimum keys value and hasnt yet been chosen
+        // and essentially saves me 1 loop (O(n^2)=>O(n))
+        // There is an optimization using a Priority queue here in order
+        // for me to be able to find the minimum element faster
         let min=Infinity
         let minKey=-1
         for (const key in keys) {
@@ -62,6 +67,8 @@ var Prims=(Edges)=>{
 
         if(min===Infinity)break
 
+
+        //updates the keys and Parents matrix
         for (const vertex in keys) {
             if(!visited.has(vertex)&&Adjacency[minKey][vertex]<keys[vertex]){
                 keys[vertex]=Adjacency[minKey][vertex]
@@ -71,8 +78,6 @@ var Prims=(Edges)=>{
 
     }
         
-    console.log(Parents,keys)
-
 
     
 
