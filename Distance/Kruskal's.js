@@ -8,7 +8,10 @@ let Kruskals=edges=>{
     let diffVertices=new Set()
     //sort ascending + check the total number of Vertices
     edges.sort(([source,to,cost],[source2,to2,cost2])=>{
-        diffVertices.add(source,to,source2,to2) 
+        diffVertices.add(source) 
+        diffVertices.add(to)
+        diffVertices.add(source2)
+        diffVertices.add(to2)
         return cost-cost2}
         )
 
@@ -23,7 +26,9 @@ let Kruskals=edges=>{
 
     let result=[]
     for (const [source,to,cost] of edges) {
-        
+        // the MST consists of N-1 nodes N being the total number of Vertices
+        if(result.length===diffVertices.size-1)break
+
         //if they re not in the same group, Unite the groups amd push said edge to my result
         if(!uf.sameGroup(mapping[source],mapping[to])){
             uf.union(mapping[source],mapping[to])
