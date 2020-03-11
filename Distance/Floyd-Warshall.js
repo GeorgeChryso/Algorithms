@@ -3,6 +3,7 @@
 
 
 //n= number of nodes
+// RETURNS THE MINIMUMDISTANCE FROM ANY VERTEX TO ANY OTHER VERTEX
 let FloydWarshall=(source,target,edges,n)=>{
 
     //create the adjacency matrix 
@@ -11,24 +12,23 @@ let FloydWarshall=(source,target,edges,n)=>{
     // A=>0, B=>1 .... LETTER=>Letter.charCodeAt(0)-65
     let numberify=letter=>letter.charCodeAt(0)-65
     //create my 3d Matrix
-    let dp=[...Array(n)].map(d=>[...Array(n)].map(q=>Array(n).fill(Infinity)))
+    let dp=[...Array(n)].map(q=>Array(n).fill(Infinity))
     
     //previousPaths representation (OPTIONAL)
     let next=[...Array(n)].map(d=>Array(n).fill([]))
 
     //basecase
     for (const [start,end,cost] of edges) {
-        dp[0][numberify(start)][numberify(end)]=cost
+        dp[numberify(start)][numberify(end)]=cost
     }
 
-    for (let k = 1; k <dp.length; k++) {
-        for (let i = 0; i < dp[k].length; i++) {
-            for (let j = 0; j < dp[k][i].length; j++) {
+    for (let k = 0; k <n; k++) {
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j <n; j++) {
                
-              //  dp[k][i][j]=Math.min(dp[k-1][i][j],dp[k-1][i][k]+dp[k-1][k][j])   
-                dp[k][i][j]=dp[k-1][i][j]
-                if(dp[k-1][i][j]>dp[k-1][i][k]+dp[k-1][k][j]){
-                    dp[k][i][j]=dp[k-1][i][k]+dp[k-1][k][j]
+              //  dp[i][j]=Math.min(dp[i][j],dp[i][k]+dp[k][j])   
+                if(dp[i][j]>dp[i][k]+dp[k][j]){
+                    dp[i][j]=dp[i][k]+dp[k][j]
 
                     //optional todo for representation
                     //   next[i][j].push(k)
@@ -58,7 +58,7 @@ let FloydWarshall=(source,target,edges,n)=>{
     //  if i want to detect a negative cycle, i run the 3 for loops a second time
     // if an optimization can be made, i set the dp[i][j]=-Infinity
 
-    return dp[n-1][numberify(source)][numberify(target)]
+    return dp[numberify(source)][numberify(target)]
 }
 
 
