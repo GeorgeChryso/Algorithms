@@ -1,7 +1,7 @@
 //Finds the MST of an UNDIRECTED GRAPH
 //using UNION FIND
 
-
+// Complexity O(ElogE+ElogV) because sorting takesd LogE find/union take logV
 let Kruskals=edges=>{
 
     //optional(incase im not given the total number of different Vertices)
