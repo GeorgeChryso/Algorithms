@@ -2,7 +2,7 @@
 
 
 
-
+// Implementation through the use of an Array
 class UnionFind {
 
     constructor(){
@@ -12,13 +12,13 @@ class UnionFind {
         this.sz
         //number of components(groups) in the union find
         this.numComponents
-        //points to the parent of i, if id[i]=i, is a root node
+        //points to the parent of i, if id[i]=i, i is a root node
         this.id=[] 
     }
 
     //construction -O(n) n=size:The total number of elements
     //put every element into its own group
-    UnionFind(size){
+    construction(size){
         if(size<=0)return 'Wrong size'
         this.size=this.numComponents=size 
         this.sz=[...Array(size)] 
