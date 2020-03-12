@@ -16,7 +16,7 @@ let SPFA=(n,edges,source)=>{
     for (let i = 0; i < n; i++) {
         distancefromStart[i]=Infinity        
     }
-    //basecase
+    //basecase -Numberify for nodes as letters
     distancefromStart[numberify(source)]=0
 
     let seen=new Set()
@@ -32,7 +32,7 @@ let SPFA=(n,edges,source)=>{
 
         for (let [src,to,cost] of edges) {
 
-            //optional
+            //optional- For nodes as LETTERS
             [src,to]=[numberify(src),numberify(to)]
 
             if( polled===to&& 
@@ -42,7 +42,7 @@ let SPFA=(n,edges,source)=>{
                 distancefromStart[to]=distancefromStart[polled]+cost
                 q.push(to)
             }
-            
+
             //If the graph is undirected you ll have to test both the to and src
             if(polled===to&& 
                distancefromStart[to]+cost < distancefromStart[src] &&
