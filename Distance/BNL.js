@@ -118,18 +118,18 @@ let skycsv2=(nodes,distance)=>{
     
     let withinDistance=(x,y)=>{
         let R=6371e3// Earth's Radius in m
-        let toRadians=x=>Math.PI*x/180
-        x=x.toRadians()
-        y=y.toRadians()
-        dx=dx.toRadians()
-        dy=dy.toRadians()
+        let toRadians=(x)=>x
+        
+        var φ1 = x
+        var φ2 = dx
+        var Δφ = (dx-x)
+        var Δλ = (dy-y)
+        
+        var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-        let DeltaLat=(dx-x).toRadians()
-        let DeltaLong=(dy-y)
-        let a = Math.sin(DeltaLat/2)**2 + Math.cos(x)*Math.cos(dx)*(
-            Math.sin(DeltaLong)**2
-        )
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         let distBetween=R*c //in m
 
         return distBetween
