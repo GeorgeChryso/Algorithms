@@ -117,26 +117,25 @@ let skycsv2=(nodes,distance)=>{
     let result=[]
     
     let withinDistance=(x,y)=>{
-        let R=6371e3// Earth's Radius in m
-        let toRadians=(x)=>x
-        
-        var φ1 = x
-        var φ2 = dx
-        var Δφ = (dx-x)
-        var Δλ = (dy-y)
+        let R=6371003// Earth's Radius in m
+        let deg2grad=deg=>deg*(Math.PI)/180
+
+        var φ1 = deg2grad(x)
+        var φ2 = deg2grad(dx)
+        var Δφ = deg2grad(dx-x)
+        var Δλ = deg2grad(dy-y)
         
         var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
                 Math.cos(φ1) * Math.cos(φ2) *
                 Math.sin(Δλ/2) * Math.sin(Δλ/2);
+
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-        let distBetween=R*c //in m
+        let distBetween=R*c*(10**-3) //in km
 
-        return distBetween
-        return distBetween*(10**-4)<=dist
+        return distBetween<=dist
     }
 
-    console.log(withinDistance( 36.513501,-82.530221   ))
 
     //distance pre-filtering
     nodes=nodes.filter( ([cname,cprice,cyear,codometer,clat,clong])=>withinDistance(clat,clong))
@@ -187,6 +186,6 @@ let csv2=[
 
 console.log(
     skycsv2(
-        csv2,[40,[ 36.318985, -82.241189   ]]
+        csv2,[20,[ 36.369462, -82.964966 ]]
     )
 )
