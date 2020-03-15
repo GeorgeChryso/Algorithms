@@ -116,6 +116,7 @@ let skycsv2=(nodes,distance)=>{
     let dominatedElements=new Set()
     let result=[]
     
+    // Haversine distance between the given x,y and my input lat long
     let withinDistance=(x,y)=>{
         let R=6371003// Earth's Radius in m
         let deg2grad=deg=>deg*(Math.PI)/180
@@ -141,6 +142,9 @@ let skycsv2=(nodes,distance)=>{
     nodes=nodes.filter( ([cname,cprice,cyear,codometer,clat,clong])=>withinDistance(clat,clong))
     console.log(nodes)
 
+    //if the filtering resulted in only one node, this is my skyline
+    if(nodes.length===1)return nodes
+    
     for (let i = 0; i < nodes.length; i++) {
         let [cname,cprice,cyear,codometer,clat,clong]=nodes[i]
         for (let j = 0; j < nodes.length; j++) {
