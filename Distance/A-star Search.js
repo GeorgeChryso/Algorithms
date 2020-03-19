@@ -5,7 +5,7 @@
 // DIJKSTRA IS A SUBSET OF A*
 // A* relies heavily on Heuristics
 
-var dijkstras=(src,Target,distances)=>{
+var AstarSearch=(src,Target,distances)=>{
 
     //source: [distances[i]]
     let connections={}
@@ -46,7 +46,7 @@ var dijkstras=(src,Target,distances)=>{
         for (const [cur,to,cost] of connections[currentElement[1]]) {
             priorityQueue.push([cur,to,cost])
             if(finalizedDist[cur]+heuristics[cur]+cost<finalizedDist[to]+heuristics[to]){
-                finalizedDist[to]=finalizedDist[cur]+cost+heuristics[cur]
+                finalizedDist[to]=finalizedDist[cur]+cost
             }
         }
         
