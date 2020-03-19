@@ -106,6 +106,45 @@ return quickSortF(left).concat(pivot, quickSortF(right))
 
 }
 
-console.log(quickSortF(
+
+let main=(arr)=>{
+
+    //D&C step
+    var QuickSort=(low,high)=>{
+        if(low<high){
+          let prtn=partition(low,high)
+          QuickSort( low, prtn-1)
+          QuickSort( prtn+1,high)
+        }
+    }
+
+    // returns the position of the pivot
+    // places all the elements less than the pivot
+    let partition=(l,h)=>{
+        let pivot=arr[h] //consider the pivot as the last index element
+
+        let i=l-1 //index of the smaller element
+
+        for (let j = l; j < h; j++) {
+
+            if(arr[j]<pivot){
+              i++
+              [arr[i],arr[j]]=[arr[j],arr[i]]
+            }        
+        }
+
+        [arr[i+1],arr[h]]=[arr[h],arr[i+1]]
+        return i+1
+    } 
+
+
+    QuickSort(0,arr.length-1)
+    return arr
+}
+
+
+
+
+console.log(main(
   [1,2,3,5,6,6,6,21,31,3,5,13221,2331,1231,112,3313]
 ))
