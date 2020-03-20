@@ -47,6 +47,49 @@ let main=(arr)=>{
     return arr
 }
 
+//reference 215 LC
+
+// Median of Medians deterministic Select
+let Dselect=(A,k)=>{
+
+
+  if(A.length<10){
+      A.sort((a,b)=>a-b)
+      return A[k]
+  }
+
+  let subsets=[]
+  let group=[]
+  for (var i = 0; i < A.length; i++) {
+      if(group.length==5){ 
+          subsets.push(group)
+          group=[]
+      }
+      group.push(A[i])
+  }
+  subsets[subsets.length-1]=subsets[subsets.length-1].concat(group)
+  
+  let mediansOfSubsets=[]
+  for (const subset of subsets) {
+      mediansOfSubsets.push(select(subset,3)) //guaranteed to hit the first if Clause
+  }
+
+  let M=select(mediansOfSubsets,Math.ceil(mediansOfSubsets.length/2))
+
+  
+  //partition around Pivot M
+  let L1=[],L2=[],L3=[]
+  let pivot=M 
+  for (let j = 0; j < A.length; j++) {
+      if(A[j]<pivot) L1.push(A[j])
+      else if( A[j]==pivot)L2.push(pivot)
+      else L3.push(A[j])
+  }
+
+  if (k <=L1.length)return select(L1,k)
+  else if (k > L1.length+L2.length)return select(L3,k-L1.length-L2.length)
+  else return L2[0] //k===L1.length+1
+}
 
 
 
