@@ -53,11 +53,12 @@ let main=(arr)=>{
 let Dselect=(A,k)=>{
 
 
-  if(A.length<10){
+  if(A.length<=10){
       A.sort((a,b)=>a-b)
       return A[k]
   }
 
+  // partition into subsets of 5 elements
   let subsets=[]
   let group=[]
   for (var i = 0; i < A.length; i++) {
@@ -71,10 +72,10 @@ let Dselect=(A,k)=>{
   
   let mediansOfSubsets=[]
   for (const subset of subsets) {
-      mediansOfSubsets.push(select(subset,3)) //guaranteed to hit the first if Clause
+      mediansOfSubsets.push(Dselect(subset,3)) //guaranteed to hit the first if Clause
   }
 
-  let M=select(mediansOfSubsets,Math.ceil(mediansOfSubsets.length/2))
+  let M=Dselect(mediansOfSubsets,Math.ceil(mediansOfSubsets.length/2))
 
   
   //partition around Pivot M
@@ -86,13 +87,45 @@ let Dselect=(A,k)=>{
       else L3.push(A[j])
   }
 
-  if (k <=L1.length)return select(L1,k)
-  else if (k > L1.length+L2.length)return select(L3,k-L1.length-L2.length)
+  if (k <=L1.length)return Dselect(L1,k)
+  else if (k > L1.length+L2.length)return Dselect(L3,k-L1.length-L2.length)
   else return L2[0] //k===L1.length+1
 }
 
 
+// Quick Select
+var Qselect=(Arr,k)=>{
+  //EDIT COMPARATOR
+  let comparator=(a,b)=>a[0]-b[0]  
 
-console.log(main(
-  [1,2,3,5,6,6,6,21,31,3,5,13221,2331,1231,112,3313]
+  let partition=(l,h)=>{
+      let pivot=Arr[h]  // notice that i consider the pivot as the last element
+      let i=l 
+      for (let j = l; j < h; j++) {
+          if( comparator(Arr[j],pivot)<0){
+            [Arr[i],Arr[j]]=[Arr[j],Arr[i]] 
+            i++
+          }        
+      }
+      [Arr[i],Arr[h]]=[Arr[h],Arr[i]]
+      return i
+  } 
+
+  let low=0
+  let high=pq.length-1
+  while(low<high){
+      let indexOfPivot=partition(low,high) 
+      if(indexOfPivot<k)low=indexOfPivot+1
+      else if(indexOfPivot>k)high=indexOfPivot-1
+      else break //case k
+  }
+  return Arr[k]
+
+}
+
+
+
+
+console.log(Dselect(
+  [1,2,3,5,6,6,6,21,31,3,5,13221,2331,1231,112,3313],2
 ))
