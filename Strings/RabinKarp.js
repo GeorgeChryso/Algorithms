@@ -64,28 +64,29 @@ var RabinKarp=(pattern,string)=>{
 
     return result 
 }
-// faster O(logN)
-// average O(N) with a nice hash and prime
-// worst O(M*N)
+
+
+
 //more concise 
+// average O(N) with a nice hash and prime , worst O(M*N),faster O(logN)
 var RabinKarp=(pattern,string)=>{
-    let m=pattern.length,n=string.length
 
     //SWITCH HERE FOR DIFFERENT VALUES
     let base=31 //the total distinct elements my string can have(for example 256 for ASCII, 26 for lowercase)
     let prime=1e9+9   // A PRIME NUMBER FOR BETTER PROBABILITY OF NO FALSE POSITIVE COLLISION ( has to be >pattern.length or str.length)
-    let prehash=x=>x.charCodeAt(0) // Maps any element of my string/array to a number
-    let hash=(x,i)=>(prehash(x)-64)*(base**(m-i))
+    let prehash=x=>x.charCodeAt(0)-64 // Maps any element of my string/array to a number
+    let hash=(x,i)=>prehash(x)*(base**(m-i))
 
-    //calculate the sum of the hashed letters of my pattern
+    
+    let m=pattern.length,n=string.length
     let patValue=0, curValue=0, result=[] //holds the starting indexes of the matches
 
     //rolling  window of size m 
     for (let i = 0; i <= n; i++) {
-        //the first m characters are accumulated
+       //calculate the sum of the hashed letters of my pattern and the first m letters of my string 
         if(i<m){
             curValue+=hash(string[i],i)
-            patValue+=hash(pattern[i],i)        
+            patValue+=hash(pattern[i],i) 
         }
         //windowSize===m  sliding the window 
         else{
@@ -97,12 +98,11 @@ var RabinKarp=(pattern,string)=>{
             if(i===n)break //consider the last window 
             curValue= (curValue-hash(string[i-m],0))*base+hash(string[i],m-1)     
         }
-
     }
 
     return result 
 }
 
 console.log(RabinKarp(
-    'AAABA','AAAABAAAAABAAAAAABAAAAABBAAAABBAAAABAAAA'
+    'AAABA','AAAABAAAAABAAAAAAZBAZZAAAABBAAAABBAAAABAAAA'
 ))
