@@ -64,8 +64,9 @@ var RabinKarp=(pattern,string)=>{
 
     return result 
 }
-
-
+// faster O(logN)
+// average O(N) with a nice hash and prime
+// worst O(M*N)
 //more concise 
 var RabinKarp=(pattern,string)=>{
     let m=pattern.length,n=string.length
