@@ -1,10 +1,5 @@
 
-// Efficient Backtracking in a pattern so I can avoid reduntant comparisons when I match it against a string
-// No backtracking is being made on the string.
-
-
-
-
+// LONGEST PREFIX THAT IS ALSO A SUFFIX AT INDEX i == LPS[i]
 //computing the lps
 // so if lps[10]=5 that means pattern[6,7,8,9,10]====pattern[0,1,2,3,4] ( prefix==suffix at index i )
 // so lps[lps.length-1] has the length of the longest prefix that is also a suffix
@@ -39,42 +34,3 @@ let computeLPS=(pattern)=>{
     }
     return lps  
 }
-
-
-let KMPsearch=(pattern,string)=>{
-    let lps=computeLPS(pattern)
-    let result=[]
-
-    //j traverses pattern and i traverses string
-    // notice that i never backtracks
-    let i=0,j=0
-    while(i<string.length){
-        if(pattern[j]===string[i]){
-            i++
-            j++
-        } 
-        //full match of pattern
-        if(j===pattern.length){
-            result.push(i-j)
-            j=lps[j-1]
-        }
-        //mismatch
-        else if( i<string.length && pattern[j]!=string[i]){
-
-            // Main thing, if j!=0 that means that i can try the 
-            // index of the previous lps
-            if(j!=0){
-                j=lps[j-1]
-            }
-            //if j==0 i cant go any more back
-            else i++
-        }
-    }
-
-    return result
-}
-
-
-console.log(KMPsearch(
-    'AAABA','AAAABAAAAABAAAAAABAAAAABBAAAABBAAAABAAAA'
-))
