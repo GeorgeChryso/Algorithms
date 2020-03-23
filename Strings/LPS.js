@@ -24,12 +24,14 @@ let computeLPS=(pattern)=>{
             // I can still go back to the previous letter
             if(len!=0){
                 len=lps[len-1]
-                i--
+                i-- //that means that I still want to test the same index, not decrementing per se
+                // but keeping i the same so the i++ wont change it
             }
             //if len==0 that means that i have to go to the beginning (first letter)
             else{
                 lps[i]=len
             }
+        
         } 
     }
     return lps  
