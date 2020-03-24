@@ -72,12 +72,12 @@ var RabinKarp=(pattern,string)=>{
 var RabinKarp=(pattern,string)=>{
 
     //SWITCH HERE FOR DIFFERENT VALUES
-    let base=31 //the total distinct elements my string can have(for example 256 for ASCII, 26 for lowercase)
+    let base=26 //the total distinct elements my string can have(for example 256 for ASCII, 26 for lowercase)
     let prime=1e9+9   // A PRIME NUMBER FOR BETTER PROBABILITY OF NO FALSE POSITIVE COLLISION ( has to be >pattern.length or str.length)
     let prehash=x=>x.charCodeAt(0)-64 // Maps any element of my string/array to a number
     let hash=(x,i)=>prehash(x)*(base**(m-i))
 
-    
+
     let m=pattern.length,n=string.length
     let patValue=0, curValue=0, result=[] //holds the starting indexes of the matches
 
