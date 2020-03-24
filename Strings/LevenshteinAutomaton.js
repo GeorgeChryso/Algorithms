@@ -41,20 +41,23 @@ let levenshteinDP=(s1,s2,distance)=>{
     //basecases dp[i][0] =i, because the distance from anything to "" is anything.length
     //dp[0][j]=j, same reason
     for (let i = 0; i <=s1.length; i++) {
-        dp[0][i]=i
         dp[i][0]=i        
     }
+    for (let j = 0; j <=s2.length; j++) {
+        dp[0][j]=j        
+    }
 
-    // dp formula               DELETE           INSERTION       REPLACE
-    // dp[i][j]= Math.min( dp[i-1][j] +1 , DP[i][j-1]+1 , dp[i-1][j-1] + Number(A[i]===B[j]) )
+    // dp formula               DELETE s2[j]    INSERTION  of s1[i-1]     REPLACE s2[j] with s1[i]
+    // dp[i][j]= Math.min( dp[i-1][j] +1 , DP[i][j-1]+1 , dp[i-1][j-1] + Number(s1[i]===s2[j]) )
 
-    for (let i = 1; i < s1.length; i++) {
-        for (let j = 1; j < s2.length; j++) {
-            //dp formula             DELETE        INSERTION       REPLACE
-            dp[i][j]= Math.min( dp[i-1][j] +1 ,   dp[i][j-1]+1 , dp[i-1][j-1] + Number(A[i]===B[j]) )            
+    for (let i = 1; i <= s1.length; i++) {
+        for (let j = 1; j <= s2.length; j++) {
+            //dp formula         DELETE s2[j]   INSERTION  of s1[i-1]       REPLACE s2[j] with s1[i] (not if they re equal)
+            dp[i][j]= Math.min( dp[i-1][j] +1 ,   dp[i][j-1]+1      , dp[i-1][j-1] + Number(s1[i-1]!==s2[j-1]) )            
         }        
     }
 
+    console.log(dp)
     return dp[s1.length][s2.length]<=distance
 }
 
@@ -81,8 +84,9 @@ class LevenshteinAutomatonX{
         return new_state
     }
 
+    //dp[s1.length][s2.length] <=distance
     isMatch=state=>state[state.length-1]<=this.maxDist
-
+    
     canMatch=state=>Math.min(...state)<=this.maxDist
 }
 
@@ -98,6 +102,6 @@ console.log( automaton.canMatch(state2)) //False, the Ldistance from 'wo' to ban
 
 
 
-console.log(levenshteinAutomaton(
+console.log(levenshteinDP(
     'adaa','bdaa' , 0
 ))
