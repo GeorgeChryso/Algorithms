@@ -25,7 +25,7 @@ let levenshteinAutomaton=( s1,s2,distance)=>{
     for (let i = 0; i < Math.min(s2.length, distance+1 ); i++) {
         //i is the position s1[0] MIGHT  be used
         // and  i is the number of characters needed to be inserted before using s1[i]
-        if(s1[0]===s2[i]&&levenshteinAutomaton(s1.slice(1),s2.slice(distance+1),distance-i))return true
+        if(s1[0]===s2[i]&&levenshteinAutomaton(s1.slice(1),s2.slice(i+1),distance-i))return true
 
     }
     return false
@@ -47,7 +47,7 @@ let levenshteinDP=(s1,s2,distance)=>{
         dp[0][j]=j        
     }
 
-    // dp formula               DELETE s2[j]    INSERTION  of s1[i-1]     REPLACE s2[j] with s1[i]
+    // dp formula               DELETE s2[j]    INSERTION  of s1[i]     REPLACE s2[j] with s1[i]
     // dp[i][j]= Math.min( dp[i-1][j] +1 , DP[i][j-1]+1 , dp[i-1][j-1] + Number(s1[i]===s2[j]) )
 
     for (let i = 1; i <= s1.length; i++) {
@@ -61,7 +61,17 @@ let levenshteinDP=(s1,s2,distance)=>{
     return dp[s1.length][s2.length]<=distance
 }
 
+
+console.log(levenshteinDP(
+    'adaa','bdaa' , 0
+))
+
+
+
+
 //julesJacobs implementation 
+// each state of the automaton is a row of my dp table of the previous solution
+// a modification on the dp formula ( an upper bound ) ensures that my automaton has finite number of states
 class LevenshteinAutomatonX{
     //given the query string and a maxLDistance
     constructor(string,maxLDistance){
@@ -76,10 +86,11 @@ class LevenshteinAutomatonX{
     //essentially same as the 2nd for loop in dp transitioning from one row to the next
     step=(state,char)=>{
         let new_state=[state[0]+1] // this is the new array with the  fixed dp[i][0]=i
-        for (let i = 0; i < state.length-1; i++) {
+        for (let i = 1; i < state.length; i++) {
             let cost= (this.s[i]==char)?0:1
-            //dp formula
-            new_state.push(Math.min( new_state[i]+1, state[i]+cost, state[i+1]+1   ))
+            //dp formula                // DELETE  , REPLACE IF DIFF , INSERT , an upper bound to make the nubmer
+            // of states of my automaton finite
+            new_state.push(Math.min( new_state[i-1]+1, state[i-1]+cost, state[i]+1 , this.maxDist+1  ))
         }
         return new_state
     }
@@ -87,21 +98,25 @@ class LevenshteinAutomatonX{
     //dp[s1.length][s2.length] <=distance
     isMatch=state=>state[state.length-1]<=this.maxDist
     
-    canMatch=state=>Math.min(...state)<=this.maxDist
-}
+    //there is a state potentially able to match  in the future/already matched
+    canMatch=state=>state.some(d=>d<=this.maxDist)
+
+    //  the automaton needs to tell us which letters to try from a given state.
+    //  We only need to try the letters that actually appear in the relevant positions in the query string
+    // If the query string is “banana” we don’t need to try “x”, “y”, and “z” separately, since they all have the same result. Also, if an entry in the state is already 3, we don’t need to try the corresponding letter in the string, since it can never cause a match anyway. Here’s the code to compute the letters to try:
+    transitions=state=>state.filter(d=>d<=this.maxDist).map((d,i)=>this.s[i])
+}   
 
 //usage
 // I want to find the strings that are distance <=2 from banana 
 let automaton=new LevenshteinAutomatonX('banana',2)
 
 let state0=automaton.start()
+console.log(state0)
 let state1=automaton.step(state0,'w')
-console.log( automaton.canMatch(state1)) //True, the Ldistance from 'w' to banana is 1, can match
+console.log( automaton.canMatch(state1),state1) //True, the Ldistance from 'w' to banana is 1, can match
+console.log(automaton.transitions(state1))
 let state2= automaton.step(state1,'o')
-console.log( automaton.canMatch(state2)) //False, the Ldistance from 'wo' to banana is 2, cant match 
+console.log( automaton.canMatch(state2),state2) //False, the Ldistance from 'wo' to banana is 2, cant match 
+console.log(automaton.transitions(state2))
 
-
-
-console.log(levenshteinDP(
-    'adaa','bdaa' , 0
-))
