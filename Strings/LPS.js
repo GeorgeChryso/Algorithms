@@ -36,3 +36,21 @@ let computeLPS=(pattern)=>{
     }
     return lps  
 }
+
+
+
+//alternative through Deterministic Finite Automaton
+var LPSthroughDFA=s=>{
+    let d=0,dfa=[...Array(s.length)].map(d=>0) 
+
+    for (let i = 1; i <s.length; i++) {
+        while(d&&s[d]!=s[i])d=dfa[d-1]
+        d+=Number(s[i]===s[d])
+        dfa[i]=d
+    }
+    return dfa
+}
+
+
+
+console.log(LPSthroughDFA('sadgasdsgsdfssssssdfsdf'),computeLPS('sadgasdsgsdfssssssdfsdf'))
