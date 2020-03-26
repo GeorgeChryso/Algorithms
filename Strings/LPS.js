@@ -44,6 +44,8 @@ var LPSthroughDFA=s=>{
     let d=0,dfa=[...Array(s.length)].map(d=>0)  // essentially the lps 
 
     for (let i = 1; i <s.length; i++) {
+        //that's essentially the whole point of lps
+        // dont reset the search from the beginning ( d=0), but instead from the last time u met s[i]
         while(d&&s[d]!=s[i])d=dfa[d-1] //backtrack till d==0 or u meet the previous occurence of s[i]
         d+=Number(s[i]===s[d])// new d is either 0, or the previous occurence of s[i] +1
         dfa[i]=d // update the table
