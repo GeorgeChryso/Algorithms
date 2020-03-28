@@ -31,7 +31,6 @@ let HungarianMCBM=edges=>{
     }   
 
 
-
     let MCBM=0
     for (const val of match) {
         MCBM+=(val!==-1)
@@ -39,6 +38,5 @@ let HungarianMCBM=edges=>{
 
     return MCBM
 }
-
 
 
