@@ -10,11 +10,13 @@
 
     let x,y
     let extendedEuclidean=(a,n)=>{
+        
+        let olda  , oldn
+        let newa  , newn
 
-        let s=0, olds=1
-        let r=n, oldr=a
+
         while(r){
-            let quotient=oldr/r;
+            let quotient=Math.floor(oldr/r);
             [oldr,r]=[r,oldr-quotient*r]
             [olds,s]=[s,olds-quotient*s]
     
