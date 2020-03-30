@@ -6,37 +6,24 @@
  // I can immediately find amodn 's inverse.
 
 
- let modInv=(a,n)=>{
+ let exEuc=(a,b)=>{
 
-    let x,y
-    let extendedEuclidean=(a,n)=>{
-        
-        let olda  , oldn
-        let newa  , newn
-
-
-        while(r){
-            let quotient=Math.floor(oldr/r);
-            [oldr,r]=[r,oldr-quotient*r]
-            [olds,s]=[s,olds-quotient*s]
-    
+    let extendedEuclidean=( a,  b) =>{
+        let x,y
+        if (a == 0) {
+            x = 0;
+            y = 1;
+            return [b,0,1];
         }
-        //gcd(0,n)= n
-
-        x=s
-        y=r
-        return quotient
+        let [g,x1,y1]= extendedEuclidean(b % a, a);
+        x = y1- Math.floor(b / a) * x1;
+        y = x1;
+        return [g,x,y];
     }
-    
-    
-    let gcdan=extendedEuclidean(a,n) // find both the gcd and the solution to the LDequation,(the x,y)
+    let gcd=extendedEuclidean(a,b) // find both the gcd and the solution to the LDequation,(the x,y)
 
-    if(gcdan==1){
-        x= (x%n + n )%n
-        return x
-    }
-    return 'no inverse possible' 
+    return gcd 
  }
 
 
-console.log(modInv(3,2))
+console.log(exEuc(10,12))
