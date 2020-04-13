@@ -117,7 +117,7 @@ let skycsv2=(nodes,distance)=>{
     let result=[]
     
     // Haversine distance between the given x,y and my input lat long
-    let withinDistance=(x,y)=>{
+    let withinDistance=(dx,dy,x,y)=>{
         let R=6371003// Earth's Radius in m
         let deg2grad=deg=>deg*(Math.PI)/180
 
