@@ -11,7 +11,7 @@ let binarySearch=(A,Target)=>{
     let R=A.length-1
     while(L<=R){
         //take the middle index, use this formula in order to avoid overflow
-        mid=L+Math.floor((R-L)/2)
+        mid=L+Math.floor((R-L)/2)  // or ( R+L)>>1
 
         //look to the right of mid
         if(A[mid]<Target)L=mid+1

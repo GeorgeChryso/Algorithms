@@ -419,8 +419,6 @@ class maxBinaryHeap{
 
   // I can implement a priority queue through Self balancing Binary Search Trees aswell
 
-
-
   function BinaryHeap(scoreFunction){
     this.content = [];
     this.scoreFunction = scoreFunction;

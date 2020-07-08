@@ -90,10 +90,12 @@ var RabinKarp=(pattern,string)=>{
         }
         //windowSize===m  sliding the window 
         else{
+
             let hashValueP=patValue%prime, hashValueCurr= curValue%prime;
+            
             if (hashValueP===hashValueCurr){ //consider equality for the PREVIOUS i as the LAST ELEMENT
                 //check for equality first
-                if(pattern===string.slice(i-m,i))result.push(i-m)
+                if(pattern===string.slice(i-m,i))result.push(i-m)//??
             }
             if(i===n)break //consider the last window 
             curValue= (curValue-hash(string[i-m],0))*base+hash(string[i],m-1)     

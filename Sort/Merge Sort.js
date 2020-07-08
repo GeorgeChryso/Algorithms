@@ -36,6 +36,7 @@ var MergeSort=A=>{
         // loop invariant: At the start of each iteration of this for loop, the 
         // subarray A[p...k-1] contains the smallest sorted elements  of L and R
         // which are the k-p first sorted elements of the subarray A[p..r]
+        // TLDR.. USE TWO POINTERS TO CREATE THE SORTED MERGED ARRAY
         for (let k = p,i=0,j=0; k<=r; k++) {
             // produce the sorted array without needing extra space
             if(LEFT[i]<=RIGHT[j]){
@@ -56,7 +57,7 @@ var MergeSort=A=>{
     //this is the recursion step,keeps breaking the array into two halves, and mergesorting them
     let MSORT=(A,p,r)=>{
         if(p<r){
-            let q=Math.floor((p+r)/2)
+            let q=Math.floor((p+r)/2)//middle element
             MSORT(A,p,q)
             MSORT(A,q+1,r)
             Merge(A,p,q,r)
