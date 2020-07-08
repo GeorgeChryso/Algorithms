@@ -6,10 +6,12 @@
 
 let selectionSort=A=>{
 
+    //For each idx
     for (let i = 0; i < A.length-2; i++) {
 
         let min=Infinity
         let minidx=-1
+        //find the smallest element on its right
         for (let j = i; j < A.length; j++) {
                 if(min>A[j]){
                     min=A[j]
@@ -17,7 +19,7 @@ let selectionSort=A=>{
                 }
         }
 
-        //swap the elements
+        //swap the elements 
         let temp=min
         A[minidx]=A[i]
         A[i]=temp
