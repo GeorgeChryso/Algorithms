@@ -24,3 +24,6 @@ let bubbleSort=A=>{
 console.log(bubbleSort(
     [13,1,2,5,2,1,2,5,3,2,1,11,232,123,12,1,10]
 ))
+
+
+//similar to insertion sort but: Does alot more swaps
