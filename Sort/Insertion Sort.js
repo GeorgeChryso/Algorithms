@@ -25,21 +25,36 @@ var InsertionSort = A => {
 
 
 // 2.3-4 Expressing insertion sort as recurrence
-
+// In order for me to sort A[1...n]
+// I sort(1...n-1) and i add A[n] to the correct spot of the last n-1 items
 var InsertionSort=A=>{
 
   let recurrence=(start,end)=>{
-
+     if(start<=end){
+       recurrence(start,end-1) //keep breaking into subproblems
+       insrt(end) //insert to the sorted array
+     }
   }
   
+  //insert an item into its previous SORTED items by moving all the bigger items 1 step to their RIGHT 
+  // and placing our item to its appropriate position.
+  let insrt=idx=>{
+      let val=A[idx]
+      let i=idx
+      while(i>0&&val<A[i-1]){
+        A[i]=A[i-1]
+        i--
+      }
+      A[i]=val
+  }
 
-  recurrence(1,n)
+  recurrence(1,A.length-1)
   return A
 }
 
 console.log(
   InsertionSort([
-    1,
+    11,
     2,
     3,
     5,
