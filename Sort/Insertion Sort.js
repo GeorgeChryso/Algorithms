@@ -22,7 +22,9 @@ var InsertionSort = A => {
 // Loop Invariant: At the start of each iteration, the subarray A[0...j-1] is sorted
 // Complexity: O(n^2) worst case when the array is reverse sorted, O(1) space
 // Best case O(n) when the array is already sorted
-
+// Θ(n+d) where d is the number of inversions in the array
+// inversion is a pair of (A[i],A[j]) elements where i<j but A[i]>A[j]
+// THE MORE SORTED THE ARRAY IS, THE LESS WORK INSERTION SORT NEEDS TO DO
 
 // 2.3-4 Expressing insertion sort as recurrence
 // In order for me to sort A[1...n]
