@@ -26,7 +26,7 @@ var dijkstras=(src,Target,distances)=>{
 
   
     let totalNodes=Object.keys(connections).length
-
+    console.log(connections)
     while(sptSet.size!==totalNodes){
         let currentElement=priorityQueue.poll()
         while(sptSet.has(currentElement[1])&&priorityQueue.heap.length!==0){
