@@ -47,6 +47,37 @@ let main=(arr)=>{
     return arr
 }
 
+//randomized Quick Select for stable Performance over large INPUTS
+// tldr: instead of always choosing the last element as a pivot, i swap its place with a random element inside the array and use it as a pivot, instead
+let RandomizedQuickSort=Arr=>{
+  let partition=(lo,hi)=>{
+    let random=Math.floor(Math.random()*(hi-lo+1))
+    [Arr[hi],Arr[random]]=[Arr[random],Arr[hi]]
+    let i=lo,pivot=Arr[hi]
+    for (let j = lo; j <hi; j++) {
+        if(Arr[j]<pivot){
+          [Arr[i],Arr[j]]=[Arr[j],Arr[i]] 
+          i++
+        }      
+    }
+    return i
+  }
+
+  let QSstep=(start,end)=>{
+    let partitionIdx=partition(start,end)
+    QSstep(start,partitionIdx-1)
+    QSstep(partitionIdx+1,end)
+  }
+  
+  QSstep(0,Arr.length-1)
+  return Arr
+}
+
+
+
+
+
+
 //reference 215 LC
 
 // Median of Medians deterministic Select
