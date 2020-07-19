@@ -79,8 +79,8 @@ let RandomizedQuickSort=Arr=>{
 
 
 //reference 215 LC
-
-// Median of Medians deterministic Select
+// U need distinct elements
+// Median of Medians deterministic Select //WORST CASE O(N)
 let Dselect=(A,k)=>{
 
 
@@ -124,10 +124,11 @@ let Dselect=(A,k)=>{
 }
 
 
-// Quick Select
+// Quick Select, finds the k-th smallest element of an array of DISTINCT ELEMENTS
+// EXPECTED Θ(n), worst O(n**2)
 var Qselect=(Arr,k)=>{
   //EDIT COMPARATOR
-  let comparator=(a,b)=>a[0]-b[0]  
+  let comparator=(a,b)=>a-b 
 
   let partition=(l,h)=>{
       let pivot=Arr[h]  // notice that i consider the pivot as the last element
@@ -143,7 +144,7 @@ var Qselect=(Arr,k)=>{
   } 
 
   let low=0
-  let high=pq.length-1
+  let high=Arr.length-1
   while(low<high){
       let indexOfPivot=partition(low,high) 
       if(indexOfPivot<k)low=indexOfPivot+1
@@ -157,6 +158,6 @@ var Qselect=(Arr,k)=>{
 
 
 
-console.log(Dselect(
+console.log(Qselect(
   [1,2,3,5,6,6,6,21,31,3,5,13221,2331,1231,112,3313],2
 ))
