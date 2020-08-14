@@ -1,5 +1,5 @@
 
-
+// I can actually compute the shortest path from the src to EVERY other vertex in O(V*E) time using Bellman Ford. BF uses dynamic programming. 
 
 // Complexity O(N*E)
 // N= number of nodes E=number of edges
@@ -21,7 +21,7 @@ let BellmanFord=(src,target,edges)=>{
     let N=Object.keys(distanceFromSource).length
 
     // main
-    for (let i = 1; i <=N-1; i++) {
+    for (let i = 1; i <=N-1; i++) { //i here means the number of  inbetween nodes i m checking. For i=1 immediate edges are taken under consideration.
         for (const [start,end,cost] of edges) {
             if(distanceFromSource[start]===Infinity)continue
             if( distanceFromSource[start]+cost<distanceFromSource[end]){

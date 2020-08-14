@@ -209,3 +209,14 @@ console.log(bst.dfsInOrder())
 console.log(bst.dfsPreOrder())
 console.log(bst.dfsPostOrder())
 console.log(bst.BFS())
+
+
+
+
+// Optimal BST
+let z=''
+for(i=1;i<32;i++)
+    z=z+''+(i+1)%2
+console.log(z)
+
+console.log(parseInt('01010101010101010101010101010101',2))
