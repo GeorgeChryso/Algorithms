@@ -1,7 +1,8 @@
 
+// Works in Directed Cyclic& Acyclic graphs with positive and Negative Edges and finds the min distance in up to N steps( n being the number of vertices) from src to Every other node
 // I can actually compute the shortest path from the src to EVERY other vertex in O(V*E) time using Bellman Ford. BF uses dynamic programming. 
 
-// Complexity O(N*E)
+// Complexity O(N*E) (bigger than Dijkstra)
 // N= number of nodes E=number of edges
 let BellmanFord=(src,target,edges)=>{
     let distanceFromSource={}
@@ -21,7 +22,7 @@ let BellmanFord=(src,target,edges)=>{
     let N=Object.keys(distanceFromSource).length
 
     // main
-    for (let i = 1; i <=N-1; i++) { //i here means the number of  inbetween nodes i m checking. For i=1 immediate edges are taken under consideration.
+    for (let i = 1; i <=N-1; i++) { //i here means the number of  inbetween EDGES i m checking. For i=1 immediate edges are taken under consideration.
         for (const [start,end,cost] of edges) {
             if(distanceFromSource[start]===Infinity)continue
             if( distanceFromSource[start]+cost<distanceFromSource[end]){
