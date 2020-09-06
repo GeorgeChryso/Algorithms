@@ -7,26 +7,19 @@
 // Implementation through the use of an Array
 class UnionFind {
 
-    constructor(){
+    constructor(size){
         //the total count of different elements(not groups) in this union find
-        this.count
+        this.count=size
         //tracks the sizes of each of the components(groups/sets)
         //groupsize[a] returns how many elements the component with root a has 
-        this.groupSize=[] 
-        //number of components(groups) in the union find
-        this.numComponents
-        //points to the parent of i, if parent[i]=i, i is a root node
-        this.parent=[] //which is also the index of the group
-    }
-
-    //construction -O(n) n=size:The total number of elements
-    //put every element into its own group
-    construction(size){
-        if(size<=0)return 'Wrong size'
-        this.count=this.numComponents=size 
         this.groupSize=[...Array(size)] 
-        this.parent=[...Array(size)] 
+        //number of components(groups) in the union find
+        this.numComponents=size
+        //points to the parent of i, if parent[i]=i, i is a root node
+        this.parent=[...Array(size)]  //which is also the index of the group
 
+        //put every element into its own group
+        // rooted at itself
         for (let i = 0; i < size; i++) {
             this.groupSize[i]=i     
             this.parent[i]=i            
