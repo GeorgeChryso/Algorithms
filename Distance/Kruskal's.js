@@ -1,4 +1,4 @@
-//Finds the MST of an UNDIRECTED GRAPH
+//Finds the MST of an UNDIRECTED WEIGHTED GRAPH
 //using UNION FIND
 
 // Complexity O(ElogE+ElogV) because sorting takesd LogE find/union take logV
@@ -12,8 +12,9 @@ let Kruskals=edges=>{
         diffVertices.add(to)
         diffVertices.add(source2)
         diffVertices.add(to2)
-        return cost-cost2}
-        )
+        return cost-cost2
+        }
+    )
 
     let uf=new UnionFind
     

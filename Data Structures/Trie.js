@@ -3,6 +3,7 @@ var Trie = function() {
     this.TrieNode=function(val){
         this.value=val
         this.children={}
+        this.hasFollowing=false
         this.completeword=false
     }
 

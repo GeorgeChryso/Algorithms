@@ -1,4 +1,4 @@
-//Finds the MST of an UNDIRECTED GRAPH
+//Finds the MST of an UNDIRECTED WEIGHTED GRAPH
 
 
 
