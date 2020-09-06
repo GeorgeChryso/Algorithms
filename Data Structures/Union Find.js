@@ -11,7 +11,8 @@ class UnionFind {
         //the total count of different elements(not groups) in this union find
         this.count
         //tracks the sizes of each of the components(groups/sets)
-        this.groupSize=[]
+        //groupsize[a] returns how many elements the component with root a has 
+        this.groupSize=[] 
         //number of components(groups) in the union find
         this.numComponents
         //points to the parent of i, if parent[i]=i, i is a root node
@@ -24,7 +25,7 @@ class UnionFind {
         if(size<=0)return 'Wrong size'
         this.count=this.numComponents=size 
         this.groupSize=[...Array(size)] 
-        this.id=[...Array(size)] 
+        this.parent=[...Array(size)] 
 
         for (let i = 0; i < size; i++) {
             this.groupSize[i]=i     
@@ -45,7 +46,7 @@ class UnionFind {
 
         // Compression, point the element to its parent if its not already pointed
         // Tldr: Not only do I point my element to its actual root, i point any
-        // inbetween element to the root aswell
+        // inbetween elements to that root aswell
         while(element!=root){
             let next=this.parent[element]
             this.parent[element]=root
