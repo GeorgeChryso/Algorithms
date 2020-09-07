@@ -50,11 +50,13 @@ class UnionFind {
     }   
 
     //Unifies the sets containing A and B
+    // if not already unified 
     // α(n) --Amortized constant time 
     union(A,B){
         let root1=this.find(A) //parent of A
             ,root2=this.find(B) //parent of B
-
+        if(root1===root2) //already unified
+            return
         // I want to put the set with fewer elements 
         // to the one with more elemenets
         if(this.groupSize[root1]<this.groupSize[root2]){
