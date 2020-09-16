@@ -2,6 +2,8 @@
 //using UNION FIND
 
 // Complexity O(ElogE+ElogV) because sorting takesd LogE find/union take logV
+// Kruskal's does not find every MST, just greedily chooses the edges with the 
+// minimal weight( hence the sorting)
 let Kruskals=edges=>{
 
     //optional(incase im not given the total number of different Vertices)
@@ -28,8 +30,6 @@ let Kruskals=edges=>{
     let result=[]
     for (const [source,to,cost] of edges) {
         // the MST consists of N-1 nodes N being the total number of Vertices
-        if(result.length===diffVertices.size-1)break
-
         //if they re not in the same group, Unite the groups amd push said edge to my result
         if(!uf.sameGroup(mapping[source],mapping[to])){
             uf.union(mapping[source],mapping[to])
