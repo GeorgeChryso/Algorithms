@@ -33,7 +33,6 @@ let JarvisConvexHull=points=>{
     let currentPoint=leftmost,nextPoint
     //start from the leftmost, keep moving counterclockwise
     do{
-        console.log(result)
         result.push(currentPoint)
         nextPoint=(currentPoint+1)%n //naively assume its the next in line
 
@@ -130,16 +129,17 @@ let GrahamScan=points=>{
             lower.push(points[i])
         }
     }
-    
+
     // returns the result clockwise
     return upper.concat( lower.reverse().slice(1,lower.length-1) ) // doing this for the specific order of elements and slice 1 because i already have p2 from UPPER, so no need to add it again
 }
 
 
 console.log(
-    JarvisConvexHull( [[0, 3], [1, 1], [2, 2], [4, 4], 
+   'Jarvis: ', JarvisConvexHull( [[0, 3], [1, 1], [2, 2], [4, 4], 
         [0, 0], [1, 2], [3, 1], [3, 3]])
     ,'\n',
+    'Graham: ',
     GrahamScan(
         [[0, 3], [1, 1], [2, 2], [4, 4], 
                       [0, 0], [1, 2], [3, 1], [3, 3]]
