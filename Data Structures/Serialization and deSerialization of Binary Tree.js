@@ -32,7 +32,7 @@ var serialize = function(root) {
             break
         q=temp
     }
-    return result
+    return result.join(',') // once an array[null,2] is joined(',')=>it becomes ',2'
 };
 
 /**
@@ -44,17 +44,18 @@ var serialize = function(root) {
 var deserialize = function(data) {
     if(!data.length)
         return null
+    data=data.split(',') // so once a string ',2' is split(',') it becomes [,2]
     let root=new TreeNode(data.shift()),temp=[root]
     while(temp.length){
         let ntemp=[]
         while(temp.length&&data.length){
             let curr=temp.shift()
-            if(curr===null)
+            if(curr==''||curr==null)
                 continue
             let d1=data.shift(),d2=data.shift()
-            curr.left=d1!==null?new TreeNode(d1):null
-            curr.right=d2!==null?new TreeNode(d2):null
-            ntemp.push(curr.left,curr.right)
+            curr.left=d1!==``?new TreeNode(d1):null 
+            curr.right=d2!==``?new TreeNode(d2):null
+            ntemp.push(curr.left||``,curr.right||``) //thats why i need to be pushing ``
         }
         temp=ntemp
     }
