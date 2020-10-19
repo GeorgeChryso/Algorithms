@@ -36,7 +36,25 @@ let Eratosthenes=n=>{
     
     return isPrime.map((d,i)=>d?i:false).filter(d=>d) //return the primes
 }
-console.log(Eratosthenes(16))
+
+//faster optimization O(n)
+// that also gets me the lowest prime factor of i
+let EratosFaster=n=>{
+    let lp=[...Array(n+1)].map(d=>false) //lowest prime factor of i
+    ,pr=[]
+    for (let i=2; i<=n; ++i) {
+        if (lp[i] == 0) {
+            lp[i] = i;
+            pr.push(i);
+        }
+        for (let j=0; j<pr.length && pr[j]<=lp[i] && i*pr[j]<=n; ++j)
+            lp[i * pr[j]] = pr[j];
+    }
+    console.log(lp)
+   return pr
+}
+
+console.log(EratosFaster(16))
 
 
 //Fermat's little theorem states that if gcd(a,p)=1, then 
