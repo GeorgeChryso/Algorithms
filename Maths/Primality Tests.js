@@ -63,3 +63,81 @@ console.log(EratosFaster(16))
 // But in practice I ll have to basically check every such 
 // case of  aε[2,p-2], which isnt better than the naive division above
 
+//Miller Rabin Test for primality of n
+// High probability of sucess, 75%
+
+//returns true if n is probably prime
+let MillerRabin=(n,iterations=5)=>{
+    if(n<4) //the only primes below 4 are 2 and 3
+        return n==2||n==3
+    //88% of all numbers have a prime factor smaller than 100
+    //so if i check if one of the primes in the range [0,100]
+    // is a divisor, i have more chances of catching a composite
+    // i can get all the primes in O(100) with sieve of eratosthenes
+    // but it's easier to just manually check em for the same complexity
+    if(n>100)
+        for (let i = 4; i < 100; i++) 
+            if(n%i==0)
+                return false        
+    
+
+    let s=0,d=n-1//n-1 is even
+    //basically writes n-1 as 2**(s) *d
+    //in order to do that , we can instead 
+    // keep shifting right s times// aka dividing by two
+    // until i meet an odd number d 
+    // then n-1 =( 2**s )* d for the reverse operation to hold
+    while ((d & 1) == 0) {
+        d >>= 1;
+        s++;
+    }
+    //perform 5 tests of random integers a in the range [2,n-2]
+    //if they fail one of the two Miller Rabin conditions, n is composite
+    // if they pass, we check another random
+    // we can increase the number of iterations, to be more sure of the result
+    for (let i = 0; i < iterations; i++) {
+        let a = 2 + ((Math.random()*(n-3)) >>0); //test the random integer a in the range [2,n-2]
+        
+        if (check_composite(n, a, d, s)) //through Fermat's Little Theorem
+        //n is the number, a is the candidate, d is 
+            return false;
+    }
+    return true
+}
+
+// number to check if prime, candidate for MR conditions, d
+let check_composite=(n,a,d,s)=>{
+    //raise a to the d modulo n 
+    //through binary exponentiation
+    let x=binExp(a,d,n) // x=[a^(d)] %n
+    if(x==1||x==n-1){
+        //check if the first condition holds
+        return false  //if it holds then we assume it's not composite
+    } 
+    for (let r = 1; r < s; r++) { 
+        x = (x * x) % n; //create  a^( (2^r) *d)
+        if (x+1== n ){ //check if 2nd the condition holds
+            return false; //if it holds then we assume it's not composite
+        }
+    }
+    return true //if both of them dont hold, then its composite
+}
+
+let binExp=(x,n,mod)=>{
+    let curr=x,result=1
+    while(n){ 
+        if(n&1)
+            result=(result*curr)%mod
+        curr=(curr*curr)%mod
+        n>>>=1
+    }
+    return result
+}
+
+console.log(MillerRabin(1e9+7))
+// let s='15311543154915531559156715711579158315971601160716091613161916211627163716571663166716691693169716991709172117231733174117471753175917771783178717891801181118231831184718611867187118731877187918891901190719131931193319491951197319791987199319971999200320112017202720292039205320632069208120832087208920992111211321292131213721412143215321612179220322072213222122372239224322512267226922732281228722932297230923112333233923412347235123572371237723812383238923932399241124172423243724412447245924672473247725032521253125392543254925512557257925912593260926172621263326472657265926632671267726832687'
+// let n=s.length,candidates=[]
+// for(let i=0;i<n-4;i+=4)
+//     candidates.push(Number(s.slice(i,i+4)))
+// console.log(candidates.length)
+// //recognizes all 148 primes
