@@ -31,14 +31,39 @@ let modInverse=(a,b)=>{
     
     return (x%b+b)%b //picks the positive x
 }
-
-
-
 console.log(extendedEuclidean(7,15))
 console.log(modInverse(7,15))
 
 
 console.log(modInverse(11,13))
+
+
+
+
+
+
+
+
+// modification for bigint
+let extendedEuclidean=( a,  b) =>{
+  
+    if (a == 0n) 
+        return [b,0n,1n];
+    
+    let [g,x1,y1]= extendedEuclidean(b % a, a),
+        x = BigInt(y1- ((b / a)>>0n) * x1,)
+        y = BigInt(x1);
+    return [g,x,y];//gcd,solution x , solution to y
+}
+let modInverse=(a,b)=>{
+    a=BigInt(a)
+    b=BigInt(b)
+    let [g,x,y]=extendedEuclidean(a,b)
+    if(g!==1n)return "Not possible" //gcd(a,mod) has to be 1 for the inverse to exist
+    
+    return Number((x%b+b)%b) //picks the positive x
+}
+
 
 
 
@@ -75,5 +100,18 @@ let FMLT=(X,M)=>{
     }
     return result
 }
-
+// USE THIS FOR BIG INTEGERS
+let binExp=(x,n,mod)=>{
+    x%=mod
+    n=BigInt(n)
+    mod=BigInt(mod)
+    let curr=BigInt(x),result=1n
+    while(n>0n){ 
+        if(n&1n)
+            result=(result*curr)%mod
+        curr=(curr*curr)%mod
+        n>>=1n
+    }
+    return Number((result+mod)%mod)
+}
 console.log(FMLT(43,10007))
