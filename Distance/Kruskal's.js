@@ -1,7 +1,7 @@
 //Finds the MST of an UNDIRECTED WEIGHTED GRAPH
 //using UNION FIND
 
-// Complexity O(ElogE+ElogV) because sorting takesd LogE find/union take logV
+// Complexity O(ElogE+ElogV) because sorting takesd LogE UNION/FIND take logV each
 // Kruskal's does not find every MST, just greedily chooses the edges with the 
 // minimal weight( hence the sorting)
 let Kruskals=edges=>{
@@ -17,27 +17,31 @@ let Kruskals=edges=>{
         return cost-cost2
         }
     )
+    let n=diffVertices.size // TOTAL NODES
 
     let uf=new UnionFind
-    
+    uf.construction(n)
+
+    //IF MY NODES HAVE LETTERS=> MAP THEM TO NUMBERS -BORING//
+//=============================================================//
+    //irrelevant if nodes are already numbered 
     // The construction is based on a mapping
     // essentially mapping my Vertices into a number
-    let mapping={}
-    let id=0 
+    let mapping={},id=0 
     diffVertices.forEach(d=>mapping[d]=id++)
-    uf.construction(diffVertices.size)
+//=============================================================//
 
-    let result=[]
+    let MST=[]
     for (const [source,to,cost] of edges) {
         // the MST consists of N-1 nodes N being the total number of Vertices
-        //if they re not in the same group, Unite the groups amd push said edge to my result
+        //if they re not in the same group, Unite the groups amd push said edge to my MST
         if(!uf.sameGroup(mapping[source],mapping[to])){
             uf.union(mapping[source],mapping[to])
-            result.push([source,to,cost])
+            MST.push([source,to,cost])
         }
     }
 
-    return result
+    return MST //list of edges 
 }
 
 

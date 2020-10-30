@@ -100,10 +100,10 @@ topush.forEach(d=>{
     console.log(hp.heap)
 })
 
-console.log(hp.poll())
-console.log(hp.heap)
+// console.log(hp.poll())
+// console.log(hp.heap)
 
-
+console.log('abc'-'abb')
 
 class maxBinaryHeap{
     constructor(){
@@ -282,7 +282,7 @@ class MaxHeap {
 
 
 //maxheap with a memo for O(nlogn) removals
-class maxBinaryHeap{
+class maxBinsaryHeap{
     constructor(){
         this.heap=[]
         this.comparator=(a,b)=>b-a
