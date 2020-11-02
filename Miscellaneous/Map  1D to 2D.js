@@ -14,3 +14,8 @@ let Numberto2D=(x,n,m)=>{
 let pairtoNumber=(i,j,n,m)=>{
     return i*m+j
 }
+
+
+console.log(Numberto2D(
+    
+))

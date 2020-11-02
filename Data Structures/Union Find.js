@@ -56,7 +56,7 @@ class UnionFind {
         let root1=this.find(A) //parent of A
             ,root2=this.find(B) //parent of B
         if(root1===root2) //already unified
-            return
+            return false    
         // I want to put the set with fewer elements 
         // to the one with more elemenets
         if(this.groupSize[root1]<this.groupSize[root2]){
@@ -69,6 +69,7 @@ class UnionFind {
         }
 
         this.numComponents-- //cos 1 less group, since i merged 2
+        return true
     }
 
     //same parent=>samegroup

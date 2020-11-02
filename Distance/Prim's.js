@@ -180,53 +180,42 @@ class minBinaryHeap{
 var Prims=(Edges)=>{
     let Adjacency={}
     for (const [source,to,cost] of Edges) {
-        if(Adjacency[source]===undefined){
-            Adjacency[source]={}
+        if(Adjacency[source]===undefined)
+            Adjacency[source]={},
             Adjacency[source][to]=cost
-        }
-        else{
+        else
             Adjacency[source][to]=cost
-
-        }
-        if(Adjacency[to]===undefined){
-            Adjacency[to]={}
+        if(Adjacency[to]===undefined)
+            Adjacency[to]={},
             Adjacency[to][source]=cost
-        }
-        else{
+        else
             Adjacency[to][source]=cost
-        }
     } 
-    let N=Object.keys(Adjacency).length
-
-    let result=[]
-
-    let priorityQueue= new minBinaryHeap()
+    let priorityQueue= new minBinaryHeap(),N=Object.keys(Adjacency).length,result=[]
     priorityQueue.comparator=([from1,to1,cost1],[from2,to2,cost2])=>cost1-cost2
 
-    let visited=new Set()
-    let start=Object.keys(Adjacency)[0]
+    let visited=new Set(),start=Object.keys(Adjacency)[0]
     visited.add(start)
-
-    for (const other in Adjacency[start]) {
-        if(Adjacency[start][other]!==Infinity)priorityQueue.push([start,other,Adjacency[start][other]])
-    }
-
+    // PUSH ALL THE EDGES INTO A PRIORITY QUEUE
+    for (const other in Adjacency[start]) 
+        if(Adjacency[start][other]!==Infinity)
+            priorityQueue.push([start,other,Adjacency[start][other]])
+    
     while(priorityQueue.heap.length && result.length!=N-1){
         var [fromc,toc,countc]=priorityQueue.poll()
-        if(visited.has(toc))continue //continue polling until a valid element is found
+        if(visited.has(toc))
+            continue //continue polling until a valid element is found
 
         result.push([fromc,toc,countc])
         visited.add(toc)
 
         //add the correct new nodes
-        for (const other in Adjacency[toc]) {
-            if(Adjacency[toc][other]!==undefined&&!visited.has(other)){
+        for (const other in Adjacency[toc]) 
+            if(Adjacency[toc][other]!==undefined&&!visited.has(other))
                 priorityQueue.push([toc,other,Adjacency[toc][other]])
-            }
-        }
-        
     }
-    if(result.length!==N-1)return 'There is no MST'
+    if(result.length!==N-1)
+        return 'There is no MST'
 
     return result
 }
