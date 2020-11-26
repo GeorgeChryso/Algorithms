@@ -20,5 +20,5 @@ let printCombRep=(set,k)=>{
 }
 
 console.log(
-    printCombRep(['A','B','C'],3)
+    printCombRep(['A','B','C','D'],3)
 )
