@@ -1,49 +1,56 @@
 
 //O(V+E)
 
-//number of verties, [...[next,previous]]
+//number of vertices, [...[next,previous]]
 var topoSort = function(n, prerequisites) {
-    let adj=[...Array(n)].map(d=>[...Array(n)].map(q=>0)) 
-    for (const [next,prev] of prerequisites) {
-        adj[prev][next]=1
+    let next={}, distinctElements=new Set()
+    for (const [nextElement,prev] of prerequisites){
+        if(next[prev]===undefined)
+            next[prev]=new Set()
+        next[prev].add(nextElement)
+        
+        distinctElements.add(prev)
+        distinctElements.add(nextElement)
     }
 
     //has cycles? through naive dfs TLE O(V+E)
-    let visited=[...Array(n)].map(d=>0)
-    let finished=new Set()
+    if(hasCycles(next,n))
+        return []
+    
+    //topo sort O(V+E)
+    let result=[],visited=new Set()
+    let dfs=(node)=>{
+        if(node===undefined||visited.has(node))
+            return
+        visited.add(node)
+        if(next[prev]&&next[prev].size)
+            next[prev].forEach(d=>dfs(d))
+        result.unshift(node)
+    }
+    distinctElements.forEach(d=>dfs(d))
+    return result
+};
+
+
+let hasCycles=( next,n)=>{
+    let visited=[...Array(n)].map(d=>0),finished=new Set()
     let hasCycles=node=>{
-        if(visited[node])return true
-        if(finished.has(node))return false
+        if(visited[node])
+            return true
+        if(finished.has(node))
+            return false
         visited[node]=true
         finished.add(node)
-        if(adj[node])
-           for (let i = 0; i < adj[node].length; i++) {
-                if(adj[node][i]){
-                    if(hasCycles(i))return true
-                }               
-           }
+        if(next[node]&&next[node].size)
+            next[node].forEach(d=>{
+                    if(hasCycles(d))
+                        return true
+            })
         visited[node]=false
         return false
     }
-    for (let i = 0; i < n; i++) {   
-        if(hasCycles(i))return [] 
-    }
-
-    //topo sort O(V+E)
-    visited=new Set()
-    let result=[]
-    let dfs=(node)=>{
-        if(node===undefined||visited.has(node))return
-        visited.add(node)
-        for (let i = 0;adj[node]&& i < adj[node].length; i++) {
-           if(adj[node][i]) dfs(i)            
-        }
-        result.unshift(node)
-    }
-
-    for (let i = 0; i < n; i++) {
-        dfs(i)        
-    }
-    
-    return result
-};
+    for (let i = 0; i < n; i++) 
+        if(hasCycles(i))
+            return true
+    return false
+}
