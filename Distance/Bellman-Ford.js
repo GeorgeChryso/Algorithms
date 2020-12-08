@@ -50,7 +50,7 @@ let BellmanFord=(src,target,edges)=>{
         return path
     }
     findPath()
-
+    console.log(distanceFromSource)
     return distanceFromSource[target]
 
 }
@@ -92,3 +92,11 @@ console.log(BellmanFord(
         ]
     
 ))
+console.log(BellmanFord(
+    2,0,[
+        [0, 1, 0],
+        [0, 2, 3],
+        [1, 2, 0]
+    ]
+    )
+)

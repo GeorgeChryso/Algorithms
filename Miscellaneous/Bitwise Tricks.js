@@ -37,3 +37,17 @@ let snoob=x=>{
     let next = nextHigherOneBit | rightOnesPattern; 
     return next
 }
+
+
+
+//iterate over all subsets of a number, aka numbers that if they have set bits
+// they have them in teh same position as the number
+let number=233
+for(let subset=number;subset>0;subset=(subset-1)&number)
+    console.log(number.toString(2),subset.toString(2))
+
+
+
+
+//get the leftmost (Most significant) set bit's  position of a number
+let number,leftmostsetbit=(Math.log(number)/Math.log(2) )>>0

@@ -8,7 +8,7 @@ var topoSort = function(n, prerequisites) {
         if(next[prev]===undefined)
             next[prev]=new Set()
         next[prev].add(nextElement)
-        
+
         distinctElements.add(prev)
         distinctElements.add(nextElement)
     }
@@ -23,8 +23,8 @@ var topoSort = function(n, prerequisites) {
         if(node===undefined||visited.has(node))
             return
         visited.add(node)
-        if(next[prev]&&next[prev].size)
-            next[prev].forEach(d=>dfs(d))
+        if(next[node]&&next[node].size)
+            next[node].forEach(d=>dfs(d))
         result.unshift(node)
     }
     distinctElements.forEach(d=>dfs(d))

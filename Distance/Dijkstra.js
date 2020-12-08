@@ -2,7 +2,7 @@
 
 // unidirectional input
 // src='A', Target='C', distances=[[A,B,1], [A,C,0],[C,K,2],...]
-var dijkstras=(src,Target,distances)=>{
+var dijkstrass=(src,Target,distances)=>{
 
     //source: [distances[i]]
     let connections={}
@@ -35,9 +35,10 @@ var dijkstras=(src,Target,distances)=>{
         sptSet.add(currentElement[1])
 
         for (const [cur,to,cost] of connections[currentElement[1]]) {
-            priorityQueue.push([cur,to,cost])
             if(finalizedDist[cur]+cost<finalizedDist[to]){
                 finalizedDist[to]=finalizedDist[cur]+cost
+                priorityQueue.push([cur,to,finalizedDist[cur]+cost])
+
             }
         }
         
@@ -158,6 +159,7 @@ var dijkstras=(src,Target,distances)=>{
     console.log(src,Target,distances)
     for (const [source,tar,cost] of distances) {
          connections[source]==undefined?connections[source]=[[source,tar,cost]]:connections[source].push([source,tar,cost])
+         connections[tar]==undefined?connections[tar]=[[tar,source,cost]]:connections[source].push([tar,source,cost])
          finalizedDist[source]=Infinity    //populate distance for n nodes
          finalizedDist[tar]=Infinity
          prev[source]=Infinity
@@ -173,7 +175,7 @@ var dijkstras=(src,Target,distances)=>{
   
     let totalNodes=Object.keys(connections).length
 
-    while(sptSet.size!==totalNodes){
+    while(priorityQueue.length()&&sptSet.size<totalNodes){
         let currentElement=priorityQueue.poll()
         while(sptSet.has(currentElement[1])&&priorityQueue.heap.length!==0){
             currentElement=priorityQueue.poll()
@@ -181,10 +183,11 @@ var dijkstras=(src,Target,distances)=>{
         sptSet.add(currentElement[1])
 
         for (const [cur,to,cost] of connections[currentElement[1]]) {
-            priorityQueue.push([cur,to,cost])
             if(finalizedDist[cur]+cost<finalizedDist[to]){
                 finalizedDist[to]=finalizedDist[cur]+cost
                 prev[to]=cur
+                priorityQueue.push([cur,to,finalizedDist[cur]+cost])
+
             }
         }
 
@@ -207,7 +210,7 @@ var dijkstras=(src,Target,distances)=>{
     }
 
     console.log(findPath())
-
+    console.log(finalizedDist)
     return finalizedDist[Target]
 }
 
@@ -235,3 +238,4 @@ console.log(dijkstras(
         ]
     
 ))
+
