@@ -27,7 +27,6 @@ console.log(binExp(2,8))
 
 let matrixMult=(A,B,mod=1e9+7)=>{
     let n1=A.length,m1=A[0].length,n2=B.length,m2=B[0].length
-
     //A*B
     if(m1==n2){
         let M=[...Array(n1)].map(d=>[...Array(m2)])
@@ -45,10 +44,6 @@ let matrixMult=(A,B,mod=1e9+7)=>{
         return matrixMult(B,A)
     return 'Impossible'
 }
-
-console.log(matrixMult(
-   [ [1,3],[2,0],[1,-2]], [[2,1,3],[4,-1,2]]
-))
 let binexpMatrix=(A,k,mod=1e9+7)=>{
     let curr=A,n=A.length,m=A[0].length,result=[...Array(n)].map((d,i)=>[...Array(m)].map((d,j)=>Number(i===j)))
     if(n!==m) // we can only exponentiate square matrices
@@ -62,6 +57,9 @@ let binexpMatrix=(A,k,mod=1e9+7)=>{
     return result
 }
 
+console.log(matrixMult(
+    [ [1,3],[2,0],[1,-2]], [[2,1,3],[4,-1,2]]
+ ))
 console.log(binexpMatrix(
-    [ [1,3],[2,0]],11
+    [ [1,3],[2,0]],0
 ))

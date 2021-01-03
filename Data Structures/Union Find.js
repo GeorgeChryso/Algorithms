@@ -79,3 +79,31 @@ class UnionFind {
     sizeOfGroup=(A)=>this.groupSize[this.find(A)]
 
 }
+
+
+
+class DS {
+    constructor(n) {
+      this.id = [...Array(n).keys()];
+      this.rank = Array(n).fill(0);
+    }
+    
+    find(i) {
+      if (i !== this.id[i]) this.id[i] = this.find(this.id[i]);
+      return this.id[i];
+    }
+    
+    union(i, j) {
+      const [I, J] = [this.find(i), this.find(j)];
+      if (I === J) return false;
+      const [rankI, rankJ] = [this.rank[I], this.rank[J]];
+      if (rankI < rankJ) this.id[I] = J;
+      else if (rankI > rankJ) this.id[J] = I;
+      else {
+        this.id[I] = J;
+        this.rank[J]++;
+      }
+      return true;
+    }
+    sameGroup=(A,B)=>this.find(A)==this.find(B)
+  }
