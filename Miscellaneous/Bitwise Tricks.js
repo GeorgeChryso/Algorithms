@@ -51,3 +51,7 @@ for(let subset=number;subset>0;subset=(subset-1)&number)
 
 //get the leftmost (Most significant) set bit's  position of a number
 let number,leftmostsetbit=(Math.log(number)/Math.log(2) )>>0
+
+
+
+
