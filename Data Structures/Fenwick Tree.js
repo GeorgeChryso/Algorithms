@@ -33,6 +33,9 @@ class FenwickTree{
             index-=this.rightMostSetBit(index)
         return sum
     }
+    rangeoperation=(l,r)=>{
+        return this.operation(r)-this.operation(l-1)
+    }
     // operates on the ith element by  val
     pointUpdate=(index,val)=>{
         // while(index<this.tree.length)
@@ -83,12 +86,13 @@ class FenwickTree{
 let A=[12,3,1,2,5,12,35,1,2,22],n=A.length
 let BIT=new FenwickTree(A,(a,b)=>a+b,(a,b)=>a+b)
 console.log(BIT.operation(n),A.reduce((a,c)=>a+c)) //notice that i have to use the index n if i want to refer to all the elements
-console.log(BIT.operation(1))  //and 1 is the first element
-BIT.pointUpdate(1,13)
-console.log(BIT.operation(1))  //and 1 is the first element
-BIT.pointSet(1,13)
-console.log(BIT.operation(1))  //and 1 is the first element
+// console.log(BIT.operation(1))  //and 1 is the first element
+// BIT.pointUpdate(1,13)
+// console.log(BIT.operation(1))  //and 1 is the first element
+// BIT.pointSet(1,13)
+// console.log(BIT.operation(1))  //and 1 is the first element
 
+console.log(BIT.rangeoperation(2,3))
 
 // We can binary search on a fenwick tree to find an index with a given value
 console.log(BIT.findIndexWithValue(17))
@@ -102,18 +106,20 @@ console.log(BIT.operation(4))
 
 // with rangge updates+ range queries
 //  construction in O(nlogn)
+// faster construction in the alternative solution
 class FenwickTreeRURQ{
     constructor(arr,operation,updateOperation){
         let n=arr.length
         this.op=operation
         this.upOp=updateOperation
         //the tree will be 1 indexed, so we 
-        this.B1=[...Array(n+1)].map(d=>0)
+        this.B1=[...Array(n+3)].map(d=>0)
         this.B2=[...this.B1]
         //note, if you have no starting 
         // array, delete this to make the construction O(n)
         for (let i = 0; i < arr.length; i++) 
-            this.rangeUpdate(i+1,i+1,arr[i])            
+            this.rangeUpdate(i+1,i+1,arr[i]) 
+      
     }
     rightMostSetBit=(i)=>i&(-i) 
 
@@ -162,3 +168,147 @@ console.log( [...Array(n)].map((d,i)=>BIT.prefixQuery(i+1))+'')
 console.log(BIT.rangeQuery(1,1))
 BIT.rangeUpdate(1,1,15)
 console.log(BIT.rangeQuery(1,1))
+
+//point update, range sum query
+class FenwickSimple{
+    constructor(A){
+        A.unshift(0)
+        let n=A.length
+        this.B1=[...Array(n+1)].map(d=>0)
+        for(let i=1;i<n;i++)
+            this.upd(i,A[i])
+    }
+    lowbit=i=>i&(-i)  
+    sum=(x)=>{
+        let sum=0
+        for(let i = x ; i > 0 ; i -= this.lowbit(i))
+            sum += this.B1[i]
+        return sum;
+    }
+    //updates the point at index x by v
+    upd=(x,v)=>{
+        for(let i=x;i<=n;i+=this.lowbit(i))
+            this.B1[i]+=v 
+    }
+    //queries the sum for a range
+    query=(l,r)=>this.sum(r)-this.sum(l-1)
+}
+
+//range update, point query
+class FenwickRUPQ{
+    constructor(A){
+        A.unshift(0)
+        let n=A.length
+        this.B1=[...Array(n+1)].map(d=>0)
+        for(let i=1;i<n;i++)
+            this.upd(i,A[i]-A[i-1],this.B1)
+    }
+    lowbit=i=>i&(-i)  
+    upd=(x,v)=>{
+        for(let i=x;i<=n;i+=this.lowbit(i))
+            this.B1[i]+=v 
+    }
+    //adds v to every element in the range [l,r]
+    update=( l,  r,  v) =>{
+        this.upd(r+1,-v)
+        this.upd(l,v)
+    }
+    // queries the point x, and ONLY THE POINT,not the prefix SUm at that point
+    query=(x)=>{
+        let sum=0
+        for(let i = x ; i > 0 ; i -= this.lowbit(i))
+            sum += this.B1[i]
+        return sum;
+    }
+}
+console.log(`\n`)
+A=[12,3,1,2,5,12,35,1,2,22]
+let BB=new FenwickRUPQ(A)
+
+
+//range update, range query
+class alternateFenwick{
+    constructor(A){
+        A.unshift(0)
+        let n=A.length
+        this.B1=[...Array(n+1)].map(d=>0)
+        this.B2=[...this.B1]
+
+        for(let i=1;i<=n;i++)
+            this.upd(i,A[i]-A[i-1],this.B1),
+            this.upd(i,i*(A[i]-A[i-1]),this.B2)
+    }
+    lowbit=i=>i&(-i)  
+    upd=(x,v,B)=>{
+        for(let i=x;i<=n;i+=this.lowbit(i))
+            B[i]+=v 
+    }
+    sum=(x,B)=>{
+        let sum=0
+        for(let i = x ; i > 0 ; i -= this.lowbit(i))
+            sum += B[i]
+        return sum;
+    }
+    //adds v to every element in the range [l,r]
+    update=( l,  r,  v) =>{
+        this.upd( r + 1, -v,this.B1); this.upd( l, v,this.B1);
+        this.upd( r + 1, -(r + 1) * v,this.B2); this.upd(l, l * v,this.B2);
+    }
+    // queries the sum of range [l,r]
+    query( l,  r) {
+        return (r + 1) * this.sum( r,this.B1) - this.sum( r,this.B2) 
+            - (l * this.sum( l - 1,this.B1) - this.sum( l - 1,this.B2));
+    }
+}
+console.log(`\n`)
+A=[12,3,1,2,5,12,35,1,2,22]
+let B=new alternateFenwick(A)
+console.log(B.query(2,5))
+B.update(1,2,2)
+console.log(B.query(1,3))
+
+// 2D FENWICK TREE FOR SUBMATRIX SUMS 
+class FenwickTree2D{
+    constructor(arr,operation,updateOperation){
+        let n=arr.length
+        this.op=operation
+        this.upOp=updateOperation
+        //the tree will be 1 indexed, so we 
+        this.B1=[...Array(n+1)].map(d=>0)
+        this.B2=[...this.B1]
+        //note, if you have no starting 
+        // array, delete this to make the construction O(n)
+        for (let i = 0; i < arr.length; i++) 
+            this.rangeUpdate(i+1,i+1,arr[i])            
+    }
+    rightMostSetBit=(i)=>i&(-i) 
+
+    // returns the prefix[0:idx]
+    prefixQuery=(idx)=> this.pointQuery(idx,this.B1)*idx-this.pointQuery(idx,this.B2)
+
+    //never use outside of the class
+    pointQuery=(idx,tree=this.B1)=>{    
+        let total = 0
+        while (idx > 0)
+            total += tree[idx],
+            idx -= idx & -idx
+        return total
+    }
+    //even for point queries, use this
+    rangeQuery=(l,r)=> this.prefixQuery(r)-this.prefixQuery(l-1)
+
+    //never use outside of the class
+    pointUpdate=(tree,index,val)=>{
+        while(index<=tree.length)
+            tree[index]+=val,
+            index+=(index&(-index))
+    }
+
+    //even for point updates, use this
+    rangeUpdate=(l,r,val)=>{
+        this.pointUpdate(this.B1, l, val)
+        this.pointUpdate(this.B1, r+1, -val)
+        this.pointUpdate(this.B2, l, val*(l-1))
+        this.pointUpdate(this.B2, r+1, -val*r)
+    }
+}
