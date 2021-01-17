@@ -72,6 +72,39 @@ var MergeSort=A=>{
 // Runtime Θ(nlogn) through Master Theorem
 
 
+
 console.log(MergeSort(
     [1,23,1,5,6,12,3,1]
 )) 
+let A=[4,1,1,23,5,5,1,7]
+var Msort=(l,r)=>{
+    if(l<r)
+        Msort(l,l+r>>1),
+        Msort((l+r>>1)+1,r),
+        Merge(l,(l+r>>1)+1,r)
+}
+let Merge=(l,mid,r)=>{
+    if(l==r)
+        return
+    console.log(l,mid,r)
+    let B=[...Array(r-l+1)],s1=l,s2=mid,i=0
+    while(s1<mid||s2<=r){
+        if(s1<mid&&s2<=r){
+            if(A[s1]>A[s2])
+                B[i]=A[s2++]
+            else
+                B[i]=A[s1++]
+        }
+        else if(s1<mid)
+            B[i]=A[s1++];
+        else if(s2<=r)
+            B[i]=A[s2++];
+        i++;
+    }
+    for(let i=0;i<r-l+1;i++)
+        A[l+i]=B[i]
+}
+
+console.log(Msort(0,7))
+
+console.log(A)

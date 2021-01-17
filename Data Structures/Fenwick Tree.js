@@ -173,9 +173,9 @@ console.log(BIT.rangeQuery(1,1))
 class FenwickSimple{
     constructor(A){
         A.unshift(0)
-        let n=A.length
-        this.B1=[...Array(n+1)].map(d=>0)
-        for(let i=1;i<n;i++)
+        this.n=A.length
+        this.B1=[...Array( this.n+1)].map(d=>0)
+        for(let i=1;i< this.n;i++)
             this.upd(i,A[i])
     }
     lowbit=i=>i&(-i)  
@@ -187,7 +187,7 @@ class FenwickSimple{
     }
     //updates the point at index x by v
     upd=(x,v)=>{
-        for(let i=x;i<=n;i+=this.lowbit(i))
+        for(let i=x;i<= this.n;i+=this.lowbit(i))
             this.B1[i]+=v 
     }
     //queries the sum for a range
