@@ -43,40 +43,8 @@ var combinations=(n,k,mod=BigInt(1e9+7))=>{
 }
 console.log(combinations(200,100))
 
-var waysToSplit = function(A) {
-    let n=A.length,prefix=[...Array(n+1)].map(d=>0),mod=1e9+7,result=0
-    for(let i=0;i<n;i++)
-        prefix[i+1]=prefix[i]+A[i]
 
-    for(let i=0;i<n-2;i++){
-        let firstpart=prefix[i+1]-prefix[0]
-        let lo=i,hi=n-1
-        while(lo<hi){
-            let mid=(lo+hi)>>1
-            if(prefix[mid]-prefix[i]>=firstpart)
-                hi=mid
-            else
-                lo=mid+1
-        }
-        console.log('bi')
-        let v1=lo
-        lo=i,hi=n-1
-        while(lo<hi){
-            let mid=(lo+hi)>>1
-            if(prefix[mid]-prefix[i]>firstpart)
-                hi=mid
-            else
-                lo=mid+1
-        }
-        console.log('bi')
 
-        let v2=hi
-        console.log(v1,v2)
-        result= (result+( v2-v1) )% mod
-    }
-    return result
-    
-};
-
-console.log(waysToSplit(
-    [1,2,2,2,5,0]))
+// Stars and Bars technique
+// Say I have n indistinguishable balls and I want to divide them into k distinguishable containers
+// the number of ways to do that is combinations( n+k-1,k-1)

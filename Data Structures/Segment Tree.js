@@ -151,7 +151,7 @@ console.log(stlp.delta)
 
 
 
-
+//questionable complexity
 class ArraySegTree{
     // Array to perfrom operations on, range query operation, PointUpdate operation
     constructor(A,op=(a,b)=>a+b,upOp=(a,b)=>a+b,opSentinel=0){
@@ -271,33 +271,35 @@ console.log(S.pointQuery(1))
 
 // IMPLICIT SEGMENT TREES: 
 // when you cant build the actual array (tree) (TOO LARGE SIZE), but know that It is filled with some value 
-// aka create vertices on the go 
-// so left and right point to indices instead, indices of my queries?
+// aka create vertices on the go only when you need them.
 
 //point update range query
+// nlogM where n is the number of queries and M is the biggest highpoint of my interval
 class ISTnode{
     constructor(l,r){
-        this.l=l,this.r=r,this.sum=0
+        //the sum holds the cumulative sum of the interval[l,r]
+        this.l=l,this.r=r,this.sum=0  
         this.leftChild,this.rightChild
     }
     extend(){
+            // only create a left and right child when l+1<r 
             if(!this.leftChild&&this.l+1<this.r){
                 let mid=this.l+this.r>>1
                 this.leftChild=new ISTnode(this.l,mid)
                 this.rightChild=new ISTnode(mid+1,this.r)
             }
     }
-    pointUpdate(i,val){
+    pointUpdate(i,val){ //propagate the update to the children 
         this.extend()
         this.sum+=val
-        if(this.leftChild){
+        if(this.leftChild)
             if(i<this.leftChild.r)
                 this.leftChild.pointUpdate(i,val)
             else
                 this.rightChild.pointUpdate(i,val)
-        }
+        
     }
-    rangeQuery(lo,hi){
+    rangeQuery(lo,hi){ //keep going until you find intervals that completely cover my query[lo,hi]
         if(lo<=this.l && this.r<=hi)
             return this.sum
         if(Math.max(this.l,lo)>=Math.min(this.r,hi))
@@ -307,7 +309,41 @@ class ISTnode{
     }   
 }
 let root=new ISTnode(0,1<<31)
-
+//pointupdate range query BigInt
+class ISTnodeBigInt{
+    constructor(l,r){
+        //the sum holds the cumulative sum of the interval[l,r]
+        this.l=BigInt(l),this.r=BigInt(r),this.sum=0  
+        this.leftChild,this.rightChild
+    }
+    extend(){
+            // only create a left and right child when l+1<r 
+            if(!this.leftChild&&this.l+1<this.r){
+                let mid=this.l+this.r>>1n
+                this.leftChild=new ISTnode(this.l,mid)
+                this.rightChild=new ISTnode(mid+1n,this.r)
+            }
+    }
+    pointUpdate(i,val){ //propagate the update to the children 
+        this.extend()
+        this.sum+=val
+        if(this.leftChild){
+            if(BigInt(i)<this.leftChild.r)
+                this.leftChild.pointUpdate(i,val)
+            else
+                this.rightChild.pointUpdate(i,val)
+        }
+    }
+    rangeQuery(lo,hi){
+        [lo,hi]=[BigInt(lo),BigInt(hi)]
+        if(lo<=this.l && this.r<=hi)
+            return this.sum
+        if(Math.max(this.l,lo)>=Math.min(this.r,hi))
+            return 0
+        this.extend()
+        return this.leftChild.rangeQuery(lo,hi)+this.rightChild.rangeQuery(lo,hi)
+    }   
+}
 //range update, point query
 class ISTnodeRUPQ2{
     constructor(l,r){
@@ -331,7 +367,6 @@ class ISTnodeRUPQ2{
             this.leftChild.pointUpdate(i,val)
         else
             this.rightChild.pointUpdate(i,val)
-        
     }
 
     rangeUpdate(lo,hi,val){

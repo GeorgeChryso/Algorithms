@@ -233,7 +233,6 @@ class alternateFenwick{
         let n=A.length
         this.B1=[...Array(n+1)].map(d=>0)
         this.B2=[...this.B1]
-
         for(let i=1;i<=n;i++)
             this.upd(i,A[i]-A[i-1],this.B1),
             this.upd(i,i*(A[i]-A[i-1]),this.B2)
@@ -312,3 +311,113 @@ class FenwickTree2D{
         this.pointUpdate(this.B2, r+1, -val*r)
     }
 }
+
+
+
+
+//sparse/ Implicit Fenwick Tree
+// Only create nodes when you need them. especially when the size of the array is
+// too high to store. 
+// 
+//point update, range sum query
+class SparseFenwickPURQ{
+    // better give a BigInt length from the get go
+    constructor(length){ 
+        this.n=BigInt(length)
+        this.A={}
+    }
+    lowbit=i=>BigInt(i)&(-BigInt(i))  
+    sum=(x)=>{
+        x=BigInt(x)
+        let sum=0
+        for(let i = x ; i > 0n; i -= this.lowbit(i))
+            sum += (this.A[i] ||0 )
+        return sum;
+    }
+    //updates the point at index x by v
+    pointUpdate=(x,v)=>{
+        x=BigInt(x)
+        x++
+        for(let i=x;i<= this.n;i+=this.lowbit(i))
+            this.A[i]=(this.A[i]||0)+v
+    }
+    //queries the sum for a range
+    rangeQuery=(l,r)=>this.sum(BigInt(r))-this.sum(BigInt(l)-1n)
+}
+
+
+let SP=new SparseFenwickPURQ(1n<<32n)
+
+SP.pointUpdate((1n<<32n)-1n,10)
+console.log(SP.rangeQuery(0n,1n<<32n))
+console.log(SP.A)
+
+SP.pointUpdate(0,-1)
+console.log(SP.rangeQuery(0n,1n<<32n))
+console.log(SP.A)
+
+
+// RangeUpdate -Point Query
+class SparseFenwickRUPQ{
+    // better give a BigInt length from the get go
+    constructor(length){ 
+        this.n=BigInt(length)
+        this.A={}
+    }
+    lowbit=i=>BigInt(i)&(-BigInt(i))  
+    //updates the point at index x by v
+    pointUpdate=(x,v)=>{
+        x=BigInt(x)+1n
+        for(let i=x;i<= this.n;i+=this.lowbit(i))
+            this.A[i]=(this.A[i]||0)+v
+    }
+    rangeUpdate=(l,r,val)=>{
+        this.pointUpdate(l,val)
+        this.pointUpdate(r+1,-val)
+    }
+    pointQuery=(x)=>{
+        x=BigInt(x)+1n
+        let sum=0
+        while( x>0n && this.A[x]!==undefined)
+            sum += (this.A[x] ||0 ),
+            x -= this.lowbit(x)
+        return sum;
+    }
+}
+
+// RangeUpdate -Range Query
+class SparseFenwickRURQ{
+    constructor(length){
+        this.n=length
+        this.B1={},this.B2={}
+    }
+    lowbit=i=>i&(-i)  
+
+    upd=(x,v,B)=>{
+        for(let i=x;i<=n;i+=this.lowbit(i))
+            B[i]= (B[i] ||0) +v 
+    }
+    sum=(x,B)=>{
+
+        let sum=0
+        for(let i = x ; i > 0 ; i -= this.lowbit(i))
+            sum =sum+ (B[i] ||0)
+        return sum;
+    }
+    //adds v to every element in the range [l,r]
+    rangeUpdate=( l,  r,  v) =>{
+        console.log()
+        this.upd( r + 1, -v,this.B1); this.upd( l, v,this.B1);
+        this.upd( r + 1, -(r + 1) * v,this.B2); this.upd(l, l * v,this.B2);
+    }
+    // queries the sum of range [l,r]
+    rangeQuery( l,  r) {
+        return (r + 1) * this.sum( r,this.B1) - this.sum( r,this.B2) 
+            - (l * this.sum( l - 1,this.B1) - this.sum( l - 1,this.B2));
+    }
+}
+
+let R=new SparseFenwickRURQ(1<<20)
+R.rangeUpdate(1,10,20)
+R.rangeUpdate(11,11,1)
+console.log(R.rangeQuery(1,13))
