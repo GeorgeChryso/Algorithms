@@ -199,13 +199,14 @@ class FenwickRUPQ{
     constructor(A){
         A.unshift(0)
         let n=A.length
+        this.n=n
         this.B1=[...Array(n+1)].map(d=>0)
         for(let i=1;i<n;i++)
             this.upd(i,A[i]-A[i-1],this.B1)
     }
     lowbit=i=>i&(-i)  
     upd=(x,v)=>{
-        for(let i=x;i<=n;i+=this.lowbit(i))
+        for(let i=x;i<=this.n;i+=this.lowbit(i))
             this.B1[i]+=v 
     }
     //adds v to every element in the range [l,r]
@@ -394,7 +395,7 @@ class SparseFenwickRURQ{
     lowbit=i=>i&(-i)  
 
     upd=(x,v,B)=>{
-        for(let i=x;i<=n;i+=this.lowbit(i))
+        for(let i=x;i<=this.n;i+=this.lowbit(i))
             B[i]= (B[i] ||0) +v 
     }
     sum=(x,B)=>{

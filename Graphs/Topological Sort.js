@@ -2,6 +2,7 @@
 //O(V+E)
 
 //number of vertices, [...[next,previous]]
+// Topologically Sort the elements of a DAG
 var topoSort = function(n, prerequisites) {
     let next={}, distinctElements=new Set()
     for (const [nextElement,prev] of prerequisites){
@@ -54,3 +55,29 @@ let hasCycles=( next,n)=>{
             return true
     return false
 }
+
+
+//topo Sort when an Object of Sets/Arrays is the input
+// inputs are Numbers.
+let topoSortDFS=next=>{
+    let result=[],seen=new Set()
+    let dfs=node=>{
+        if(!seen.has(node)){
+            seen.add(node)
+            if(next[node]&&next[node].size) //change.size if array
+                next[node].forEach(child=>dfs(Number(child)))
+            result.unshift(node)
+        }
+    }
+    for(let node in next)
+        dfs(Number(node))//
+    return result
+}
+
+console.log(topoSortDFS([[4,3,1],[3,2,4],[3],[4],[]]))
+console.log(topoSortDFS( {
+    0:new Set([4,3,1]),
+    1:new Set([3,2,4]),
+    2:new Set([3]),
+    3:new Set([4]),
+    4:new Set([]) } ))

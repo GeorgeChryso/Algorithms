@@ -9,7 +9,8 @@
 // object based segment trees
 class SegTree{
     constructor(l,r,A,operation){
-        this.leftmost=l,this.rightmost=r,this.sum
+        this.leftmost=l,this.rightmost=r,this.sum,
+        this.mid=l+((r-l)>>1)
         //change these for different operations
         this.operation=operation,this.sentinel=0
         //create the subtrees
@@ -30,14 +31,14 @@ class SegTree{
     pointUpdate(index,newVal){
         if(this.leftmost==this.rightmost)
             return this.sum=newVal
-        if(index<=this.leftChild.rightmost)
+        if(index<=this.mid)
             this.leftChild.pointUpdate(index,newVal)
         else
             this.rightChild.pointUpdate(index,newVal)
         this.recalc()
     }
 
-    rangeOperation=(left,right)=>{ //inclusive
+    rangeQuery=(left,right)=>{ //inclusive
         //entirely disjoint
         if(left>this.rightmost||right<this.leftmost)
             return this.sentinel
@@ -45,7 +46,7 @@ class SegTree{
         if(left<=this.leftmost&&this.rightmost<=right)
             return this.sum
         // partially covered
-        return this.operation(this.leftChild.rangeOperation(left,right),this.rightChild.rangeOperation(left,right))
+        return this.operation(this.leftChild.rangeQuery(left,right),this.rightChild.rangeQuery(left,right))
     }
 }
 
@@ -57,9 +58,9 @@ let st=new SegTree(0,n-1,A,addition)
 console.log(A.reduce(addition))
 // console.log(st.rightChild)
 // // console.log(st.rangeSum(0,3))
-//  console.log(st.rangeOperation(1,5))
+//  console.log(st.rangeQuery(1,5))
 //  st.pointUpdate(1,50)
-//  console.log(st.rangeOperation(0,1))
+//  console.log(st.rangeQuery(0,1))
 
  class SegTreeLazyPropagation{
     constructor(l,r,A,operation=null,rangeUpdateOperation=null,Sentinel=0,lazypropSentinel=0){
@@ -96,58 +97,64 @@ console.log(A.reduce(addition))
             this.rightChild.pointUpdate(index,newVal)
         this.recalc()
     }
-    rangeUpdate(L,R,val){
+
+    deltaCheck(){
         if(this.delta){
             this.sum=this.rangeUpdateOperation(this.sum,this.delta*(-this.leftmost+this.rightmost+1))
             if(this.leftmost!==this.rightmost)//propagate the change to its children
-                this.leftChild.delta+=this.delta,
+                this.leftChild.delta=+this.delta,
                 this.rightChild.delta+=this.delta
             this.delta=null
         }
-        if(L>this.rightmost||R<this.leftmost)
+    }
+    // EXTERNAL 
+    rangeUpdate(L,R,val){
+        this.deltaCheck() //if there's a delta, use it and propagate it to the children
+
+        if(L>this.rightmost||R<this.leftmost) //not covered at all
             return
-        if(L<=this.leftmost&&this.rightmost<=R){
+        if(L<=this.leftmost&&this.rightmost<=R){ //fully covered
             this.sum=this.rangeUpdateOperation(this.sum,val*(-this.leftmost+this.rightmost+1))
             if(this.leftmost!==this.rightmost)//propagate the change to its children
                 this.leftChild.delta+=val,
                 this.rightChild.delta+=val
             return 
         }
-
+        //semi covered
         this.leftChild.rangeUpdate(L,R,val)
         this.rightChild.rangeUpdate(L,R,val)
         this.sum=this.operation(this.leftChild.sum, this.rightChild.sum)
     }
     rangeOperation=(left,right)=>{ //inclusive
-        if(this.delta){
-            this.sum=this.rangeUpdateOperation(this.sum,this.delta*(-this.leftmost+this.rightmost+1))
-            if(this.leftmost!==this.rightmost)//propagate the change to its children
-                this.leftChild.delta=+this.delta,
-                this.rightChild.delta+=this.delta
-            else 
-                this.sum+=this.delta
-            this.delta=null
-        }
+        this.deltaCheck() //if there's a delta, use it and propagate it to the children
         //entirely disjoint
         if(left>this.rightmost||right<this.leftmost)
             return this.sentinel
         // entirely covered
         if(left<=this.leftmost&&this.rightmost<=right)
-            return this.sum
-        
+            return this.sum  
         // partially covered
         return this.operation(this.leftChild.rangeOperation(left,right),this.rightChild.rangeOperation(left,right))
     }
 }
-
+//[1,12,1,73,1,33,12]
 let stlp=new SegTreeLazyPropagation(0,n-1,A,addition,addition,0,0)
 console.log(stlp.rangeOperation(0,n-1))
 stlp.rangeUpdate(0,2,1)
+console.log(stlp.rangeOperation(2,2),'  d')
+
 stlp.rangeUpdate(2,2,6)
+console.log(stlp.rangeOperation(2,2),'d+6')
+
+stlp.rangeUpdate(2,4,4)
+console.log(stlp.rangeOperation(2,2),'d+4')
+
+stlp.rangeUpdate(2,2,3)
+console.log(stlp.rangeOperation(2,2),'d+3')
+
+console.log(stlp.rangeOperation(2,2))
 stlp.rangeUpdate(2,3,1)
-console.log(stlp.delta)
 console.log(stlp.rangeOperation(0,n-1))
-console.log(stlp.delta)
 
 
 
@@ -286,7 +293,7 @@ class ISTnode{
             if(!this.leftChild&&this.l+1<this.r){
                 let mid=this.l+this.r>>1
                 this.leftChild=new ISTnode(this.l,mid)
-                this.rightChild=new ISTnode(mid+1,this.r)
+                this.rightChild=new ISTnode(mid,this.r)
             }
     }
     pointUpdate(i,val){ //propagate the update to the children 
@@ -321,7 +328,7 @@ class ISTnodeBigInt{
             if(!this.leftChild&&this.l+1<this.r){
                 let mid=this.l+this.r>>1n
                 this.leftChild=new ISTnode(this.l,mid)
-                this.rightChild=new ISTnode(mid+1n,this.r)
+                this.rightChild=new ISTnode(mid,this.r)
             }
     }
     pointUpdate(i,val){ //propagate the update to the children 
@@ -354,7 +361,7 @@ class ISTnodeRUPQ2{
         if(!this.leftChild&&this.l<=this.r){
             let mid=(this.l+this.r)>>1n
             this.leftChild=new ISTnodeRUPQ2(this.l,mid)
-            this.rightChild=new ISTnodeRUPQ2(mid+1n,this.r)
+            this.rightChild=new ISTnodeRUPQ2(mid,this.r)
         }
     }
     pointUpdate(i,val){
@@ -385,3 +392,13 @@ class ISTnodeRUPQ2{
         return this.leftChild.pointQuery(idx)+this.rightChild.pointQuery(idx)
     }
 }
+
+
+//Persistent Segment Tree
+// remembers its previous state.
+// so i can find, and query previous states.
+
+// each change changes O(logn) vertices from the root
+
+
+//what is the k-th smallest element in a range + Point Updates
