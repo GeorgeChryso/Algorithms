@@ -1,9 +1,4 @@
 
-console.log('yelo')
-let Az=[...Array(71582789)]
-
-console.log('yelo')
-
 //point update- Range Query
 class Fenwick2DPURQ{
     constructor(A){

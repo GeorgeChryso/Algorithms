@@ -87,3 +87,6 @@ console.log(FloydWarshall(
         6
     
 ))
+
+
+console.log((-10)%3)
