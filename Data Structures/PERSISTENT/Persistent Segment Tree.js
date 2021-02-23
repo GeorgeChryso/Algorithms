@@ -46,12 +46,15 @@ class PeristentSegTreeNode{
         return this.operation(this.leftChild.rangeQuery(left,right),this.rightChild.rangeQuery(left,right))
     }
 }
+// REFERENCES https://www.youtube.com/watch?v=m3uEG4NgJx8&t=393s
+// https://discuss.codechef.com/t/persistence-made-simple-tutorial/14915
+
 
 //initialization on  an already existing Array A
 let A=[1,2,6,4,3,1,2,6]
 
 let root=new PeristentSegTreeNode(0,A.length-1),curr
-for(let i=0;i<A.length;i++)
+for(let i=0;i<A.length;i++) //<= NLOGN BASE CREATION
     curr=root.pointUpdate(i,A[i]),
     console.log(root),
     root=curr,

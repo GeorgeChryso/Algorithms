@@ -40,38 +40,22 @@ let computeLPS=(pattern)=>{
     return lps  
 }
 
-
 let KMPsearch=(pattern,string)=>{
-    let lps=computeLPS(pattern)
-    let result=[]
-
     //j traverses pattern and i traverses string
-    // notice that i never backtracks
-    let i=0,j=0
+    let lps=computeLPS(pattern),result=[],i=0,j=0
     while(i<string.length){
-        if(pattern[j]===string[i]){
-            i++
-            j++
-        } 
-        //full match of pattern
-        if(j===pattern.length){
-            result.push(i-j)
+        if(pattern[j]===string[i])
+            i++,j++
+        if(j===pattern.length) //full match of pattern
+            result.push(i-j),
             j=lps[j-1]
-        }
-        //mismatch
-        else if( i<string.length && pattern[j]!=string[i]){
-
-            // Main thing, if j!=0 that means that i can try the 
-            // index of the previous lps
-            if(j!=0){
+        else if( i<string.length && pattern[j]!=string[i])//mismatch
+            if(j!=0) //try the index of the previous lps
                 j=lps[j-1]
-            }
-            //if j==0 i cant go any more back
-            else i++
-        }
+            else  //if j==0 i cant go any more back
+                i++
     }
-
-    return result
+    return result //result has the first indices of full matches of pattern against string
 }
 
 

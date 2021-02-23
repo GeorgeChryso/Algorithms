@@ -16,7 +16,7 @@ class YNode{
             if(xl===xr)
                 this.sum=A[xl][l]
             else
-                this.sum=this.memo[xl][this.xmid][l][r]+this.memo[this.xmid+1][xr][l][r]
+                this.sum=this.memo[xl][this.xmid][l][r]+this.memo[this.xmid+1][xr][l][r] //CHANGE MIN/MAX
         else
             this.leftChild=new YNode(xl,xr,this.yl,this.ymid,A,memo),
             this.rightChild=new YNode(xl,xr,1+this.ymid,this.yr,A,memo)
@@ -24,7 +24,7 @@ class YNode{
     }
     recalc(){
         if(this.yl!==this.yr)
-            this.sum=this.leftChild.sum+this.rightChild.sum
+            this.sum=this.leftChild.sum+this.rightChild.sum //CHANGE MIN/MAX
         this.memo[this.xl][this.xr][this.yl][this.yr]=this.sum
     }
     pointUpdate(index,newVal){
@@ -32,7 +32,7 @@ class YNode{
             if(this.xl===this.xr)
                 this.sum=newVal
             else
-                this.sum=this.memo[this.xl][this.xmid][this.yl][this.yr]+this.memo[this.xmid+1][this.xr][this.yl][this.yr]
+                this.sum=this.memo[this.xl][this.xmid][this.yl][this.yr]+this.memo[this.xmid+1][this.xr][this.yl][this.yr] //CHANGE (MIN/MAX)
         else
             if(index<=this.ymid)
                 this.leftChild.pointUpdate(index,newVal)
@@ -79,10 +79,10 @@ class Xnode2DSEG{
     }
     rangeQuery=(xt,yt,xb,yb)=>{ //inclusive
         if(xt>this.xr||xb<this.xl)
-            return 0
+            return 0 //CHANGE, SENTINEL FOR(MIN/MAX)
         if(xt<=this.xl&&this.xr<=xb)
             return this.segY.rangeQuery(yt,yb)
-        return this.leftChild.rangeQuery(xt,yt,xb,yb)+this.rightChild.rangeQuery(xt,yt,xb,yb)
+        return this.leftChild.rangeQuery(xt,yt,xb,yb)+this.rightChild.rangeQuery(xt,yt,xb,yb) //CHANGE( MIN/MAX)
     }
 }
 
@@ -99,3 +99,8 @@ console.log(Seg2d.rangeQuery(0,0,n-1,m-1))
 Seg2d.pointUpdate(0,0,10) //point SET
 console.log(Seg2d.rangeQuery(0,0,0,0))
 console.log(Seg2d.rangeQuery(0,0,n-1,m-1))
+
+
+console.log(Seg2d.rangeQuery(1,2,2,4))
+Seg2d.pointUpdate(n-1,m-1,15) //point SET
+console.log(Seg2d.rangeQuery(1,2,2,4))
