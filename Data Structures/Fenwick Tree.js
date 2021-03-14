@@ -225,7 +225,8 @@ class FenwickRUPQ{
 console.log(`\n`)
 A=[12,3,1,2,5,12,35,1,2,22]
 let BB=new FenwickRUPQ(A)
-
+console.log(BB.upd(1,A.length,1))
+console.log(BB.query(0))
 
 //range update, range query
 class alternateFenwick{
@@ -345,6 +346,7 @@ class SparseFenwickPURQ{
     //queries the sum for a range
     rangeQuery=(l,r)=>this.sum(BigInt(r))-this.sum(BigInt(l)-1n)
 }
+
 
 
 let SP=new SparseFenwickPURQ(1n<<32n)

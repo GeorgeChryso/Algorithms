@@ -3,7 +3,7 @@
 
 
 
-// returns an array of all combinations out of the set of length k
+// returns an array of all PERMUTATIONS WITH REPETITION out of the set of length k
 let printCombRep=(set,k)=>{
     let result=[],n=set.length
     let rec=(prefix)=>{
@@ -20,5 +20,5 @@ let printCombRep=(set,k)=>{
 }
 
 console.log(
-    printCombRep(['A','B','C','D'],3)
+    printCombRep(['A','B','A'],2)
 )

@@ -43,17 +43,16 @@ class SuffixAutomaton{
         }
         else {
             let q = this.st[p].next[c];
-            if (this.st[p].len + 1 == this.st[q].len) {
+            if (this.st[p].len + 1 == this.st[q].len) 
                 this.st[cur].link = q;
-            } else {
+            else {
                 let clone = sz++;
                 this.st[clone].len = st[p].len + 1;
                 this.st[clone].next = st[q].next;
                 this.st[clone].link = st[q].link;
-                while (p != -1 && this.st[p].next[c] == q) {
-                    this.st[p].next[c] = clone;
+                while (p != -1 && this.st[p].next[c] == q) 
+                    this.st[p].next[c] = clone,
                     p = this.st[p].link;
-                }
                 this.st[q].link = this.st[cur].link = clone;
             }
         }

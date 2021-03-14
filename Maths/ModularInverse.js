@@ -7,7 +7,7 @@
 
 
 
-let extendedEuclidean=( a,  b) =>{
+var extendedEuclidean=( a,  b) =>{
     if (a == 0) 
         return [b,0,1];
     
@@ -23,12 +23,10 @@ let extendedEuclidean=( a,  b) =>{
  // If a number a has a modular inverse modb , then I can find the triplet extended euclidean gives me
  // x is the inverse of a modb
 // BUT, X CAN BE A NEGATIVE NUMBER, THAT'S WHY I HAVE TO  FIND THE EQUILEVANT POSITIVE NUMBER
-
-let modInverse=(a,b)=>{
-
+// O(logM)
+var modInverse=(a,b)=>{
     let [g,x,y]=extendedEuclidean(a,b)
     if(g!==1)return "Not possible" //gcd(a,mod) has to be 1 for the inverse to exist
-    
     return (x%b+b)%b //picks the positive x
 }
 console.log(extendedEuclidean(7,15))
@@ -45,17 +43,15 @@ console.log(modInverse(11,13))
 
 
 // modification for bigint
-let extendedEuclidean=( a,  b) =>{
-  
+var extendedEuclidean=( a,  b) =>{
     if (a == 0n) 
         return [b,0n,1n];
-    
     let [g,x1,y1]= extendedEuclidean(b % a, a),
         x = BigInt(y1- ((b / a)>>0n) * x1,)
         y = BigInt(x1);
     return [g,x,y];//gcd,solution x , solution to y
 }
-let modInverse=(a,b)=>{
+var modInverse=(a,b)=>{
     a=BigInt(a)
     b=BigInt(b)
     let [g,x,y]=extendedEuclidean(a,b)
@@ -115,3 +111,18 @@ let binExp=(x,n,mod)=>{
     return Number((result+mod)%mod)
 }
 console.log(FMLT(43,10007))
+
+
+
+
+//FIND THE MODULAR INVERSE FOR EVERY NUMBER MODULO M => M has to be PRIMEEEE
+// In O(Mod)
+let modularInverses=(MOD=1e9+7)=>{
+    let ModInverse=[...Array(MOD)]
+    ModInverse[1]=1
+    for(let i=2;i<MOD;i++)
+        ModInverse[i]= MOD-  ((MOD/i)>>0)*ModInverse[MOD%i]  %MOD
+    return ModInverse
+}
+
+console.log(modularInverses())

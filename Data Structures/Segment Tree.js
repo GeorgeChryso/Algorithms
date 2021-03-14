@@ -264,13 +264,11 @@ class ArraySegTreeRUPQ{
 
 A=[2,1,3,5,2,2,12]
 S=new ArraySegTreeRUPQ(A)
-
-console.log(S.pointQuery(1))
-S.rangeUpdate(0,4,2)
+S.rangeUpdate(0,0,2)
+console.log(S.pointQuery(0))
 console.log(S.pointQuery(1))
 S.rangeUpdate(1,5,3)
 console.log(S.pointQuery(1))
-
 
 
 
@@ -293,7 +291,7 @@ class ISTnode{
             if(!this.leftChild&&this.l+1<this.r){
                 let mid=this.l+this.r>>1
                 this.leftChild=new ISTnode(this.l,mid)
-                this.rightChild=new ISTnode(mid,this.r)
+                this.rightChild=new ISTnode(mid+1,this.r)
             }
     }
     pointUpdate(i,val){ //propagate the update to the children 
@@ -328,7 +326,7 @@ class ISTnodeBigInt{
             if(!this.leftChild&&this.l+1<this.r){
                 let mid=this.l+this.r>>1n
                 this.leftChild=new ISTnode(this.l,mid)
-                this.rightChild=new ISTnode(mid,this.r)
+                this.rightChild=new ISTnode(mid+1,this.r)
             }
     }
     pointUpdate(i,val){ //propagate the update to the children 
@@ -361,7 +359,7 @@ class ISTnodeRUPQ2{
         if(!this.leftChild&&this.l<=this.r){
             let mid=(this.l+this.r)>>1n
             this.leftChild=new ISTnodeRUPQ2(this.l,mid)
-            this.rightChild=new ISTnodeRUPQ2(mid,this.r)
+            this.rightChild=new ISTnodeRUPQ2(mid+1,this.r)
         }
     }
     pointUpdate(i,val){

@@ -47,7 +47,7 @@ class PeristentSegTreeNode{
     }
 }
 // REFERENCES https://www.youtube.com/watch?v=m3uEG4NgJx8&t=393s
-// https://discuss.codechef.com/t/persistence-made-simple-tutorial/14915
+// https://discuss.codechef.com/t/persistence-made-simple-tutorial/14915    <=CHECK THE COMMENT FOR PERSISTENCY
 
 
 //initialization on  an already existing Array A

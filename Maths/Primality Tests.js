@@ -40,18 +40,16 @@ let Eratosthenes=n=>{
 //faster optimization O(n)
 // that also gets me the lowest prime factor of i
 let EratosFaster=n=>{
-    let lp=[...Array(n+1)].map(d=>false) //lowest prime factor of i
-    ,pr=[]
+    let lpf=[...Array(n+1)].map(d=>false), //lowest prime factor of i
+        primes=[]
     for (let i=2; i<=n; ++i) {
-        if (lp[i] == 0) {
-            lp[i] = i;
-            pr.push(i);
-        }
-        for (let j=0; j<pr.length && pr[j]<=lp[i] && i*pr[j]<=n; ++j)
-            lp[i * pr[j]] = pr[j];
+        if (!lpf[i]) 
+            lpf[i] = i,primes.push(i)
+        for (let j=0; j<primes.length && primes[j]<=lpf[i] && i*primes[j]<=n; ++j)
+            lpf[i * primes[j]] = primes[j];
     }
-    console.log(lp)
-   return pr
+   console.log(lpf)
+   return primes
 }
 
 console.log(EratosFaster(16))
@@ -141,3 +139,10 @@ console.log(MillerRabin(1e9+7))
 //     candidates.push(Number(s.slice(i,i+4)))
 // console.log(candidates.length)
 // //recognizes all 148 primes
+
+
+//wilson's theorem
+// p is prime only when ((p-1)!) % p !=-1
+// In practice, Wilson's theorem is useless as a primality test because computing (n − 1)! modulo n for large n is computationally complex, and much faster primality tests are known (indeed, even trial division is considerably more efficient).
+
+
