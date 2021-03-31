@@ -1,6 +1,6 @@
 // Binary heap is the implementation of the Priority Queue A.D.T.
 
-//minheap
+//minheap TRASH COMPLEXITY
 class minBinaryHeap{
     constructor(){
         this.heap=[]
@@ -89,8 +89,6 @@ class minBinaryHeap{
         this.heap[a]=temp
     }
 }
-
-
 let hp=new minBinaryHeap()
 
 let topush=[2,1,32,1,0,2,5,0]
@@ -104,7 +102,7 @@ topush.forEach(d=>{
 // console.log(hp.heap)
 
 console.log('abc'-'abb')
-
+//TRASH COMPLEXITY
 class maxBinaryHeap{
     constructor(){
         this.heap=[]
@@ -185,99 +183,69 @@ class maxBinaryHeap{
       }
 }
 
-// alternative
+// OK COMPLEXITY
 class MaxHeap {
   constructor(data = []) {
     this.data = data;
     this.comparator = (a, b) => b - a;
     this.heapify();
   }
-
-  // O(nlog(n)). In fact, O(n)
   heapify() {
-    if (this.length() < 2) return;
-    for (let i = 1; i < this.length(); i++) {
+    for (let i = 1;this.length() < 2 &&i < this.length(); i++) 
       this.bubbleUp(i);
-    }
   }
-
-  // O(1)
-  peek() {
-    if (this.length() === 0) return null;
-    return this.data[0];
-  }
-
-  // O(log(n))
   push(value) {
     this.data.push(value);
     this.bubbleUp(this.length() - 1);
   }
-
-  // O(log(n))
   poll() {
     if (this.length() === 0) return null;
-    const result = this.data[0];
-    const last = this.data.pop();
-    if (this.length() !== 0) {
-      this.data[0] = last;
-      this.bubbleDown(0);
-    }
+    let [result,last] =[this.data[0],this.data.pop()]
+    if (this.length()) 
+      this.data[0] = last,
+      this.bubbleDown(0)
     return result;
   }
-
-  // O(log(n))
   bubbleUp(index) {
     while (index > 0) {
       const parentIndex = (index - 1) >> 1;
-      if (this.comparator(this.data[index], this.data[parentIndex]) < 0) {
-        this.swap(index, parentIndex);
-        index = parentIndex;
-      } else {
+      if (this.comparator(this.data[index], this.data[parentIndex]) < 0) 
+        this.swap(index, parentIndex),
+        index = parentIndex
+      else 
         break;
-      }
     }
   }
-
-  // O(log(n))
   bubbleDown(index) {
     const lastIndex = this.length() - 1;
     while (true) {
-      const leftIndex = index * 2 + 1;
-      const rightIndex = index * 2 + 2;
-      let findIndex = index;
+      let [leftIndex,rightIndex,findIndex] = [index * 2 + 1,index * 2 + 2,index]
       if (
         leftIndex <= lastIndex &&
         this.comparator(this.data[leftIndex], this.data[findIndex]) < 0
-      ) {
+      ) 
         findIndex = leftIndex;
-      }
       if (
         rightIndex <= lastIndex &&
         this.comparator(this.data[rightIndex], this.data[findIndex]) < 0
-      ) {
+      ) 
         findIndex = rightIndex;
-      }
-      if (index !== findIndex) {
-        this.swap(index, findIndex);
-        index = findIndex;
-      } else {
+      
+      if (index !== findIndex) 
+        this.swap(index, findIndex),
+        index = findIndex
+      else 
         break;
-      }
+      
     }
   }
-
+  peek=()=>this.data[0]||null
   // O(1)
   swap(index1, index2) {
-    [this.data[index1], this.data[index2]] = [
-      this.data[index2],
-      this.data[index1]
-    ];
+    [this.data[index1], this.data[index2]] = [this.data[index2],this.data[index1]];
   }
-
   // O(1)
-  length() {
-    return this.data.length;
-  }
+  length=()=>this.data.length;
 }
 
 

@@ -20,7 +20,7 @@ let trialDivision=n=>{
     return [primefactors,powers]
 }
 
-console.log(trialDivision(24))
+console.log(trialDivision(21))
 
 //precomputed primes up to sqrt(n) with Sieve and only check those
 let EratosFaster=n=>{
@@ -51,7 +51,7 @@ let trialOptimized=n=>{
     primefactors.push(n),powers.push(1) //push the number itself
     return [primefactors,powers]
 }
-console.log(trialOptimized(24))
+console.log(trialOptimized(21))
 
 
 

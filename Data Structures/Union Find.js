@@ -61,11 +61,13 @@ class UnionFind {
         // to the one with more elemenets
         if(this.groupSize[root1]<this.groupSize[root2]){
             this.groupSize[root2]+=this.groupSize[root1]
-            this.parent[root1]=this.parent[root2]
+            this.parent[root1]=root2
+            this.parent[A]=this.parent[B]=root2
         }
         else {
             this.groupSize[root1]+=this.groupSize[root2]
-            this.parent[root2]=this.parent[root1]
+            this.parent[root2]=root1
+            this.parent[A]=this.parent[B]=root1
         }
 
         this.numComponents-- //cos 1 less group, since i merged 2
@@ -89,12 +91,50 @@ class DS {
     }
     
     find(i) {
-      if (i !== this.id[i]) this.id[i] = this.find(this.id[i]);
+      if (i !== this.id[i]) 
+        this.id[i] = this.find(this.id[i]);
       return this.id[i];
     }
     
     union(i, j) {
       const [I, J] = [this.find(i), this.find(j)];
+      if (I === J) return false;
+      const [rankI, rankJ] = [this.rank[I], this.rank[J]];
+      if (rankI < rankJ) this.id[I] = J;
+      else if (rankI > rankJ) this.id[J] = I;
+      else {
+        this.id[I] = J;
+        this.rank[J]++;
+      }
+      return true;
+    }
+    sameGroup=(A,B)=>this.find(A)==this.find(B)
+  }
+
+
+  //object based uniion find
+  class DS {
+    constructor(n) {
+      this.id = {}
+      this.rank = {}  //numComponents
+    }
+    add=(key)=>{ //add a new object
+        this.id[key]=key
+        this.rank[key]=0
+    }
+    find(i) {
+      if(this.id[i]===undefined){
+         return -1
+      }
+      if (i !== this.id[i]) 
+        this.id[i] = this.find(this.id[i]);
+      return this.id[i];
+    }
+    
+    union(i, j) {
+      const [I, J] = [this.find(i), this.find(j)];
+      if(I===null||J===null)
+            return false
       if (I === J) return false;
       const [rankI, rankJ] = [this.rank[I], this.rank[J]];
       if (rankI < rankJ) this.id[I] = J;

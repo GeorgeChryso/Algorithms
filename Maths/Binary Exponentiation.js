@@ -11,7 +11,7 @@
 
 // so the mod here serves for cases of overflow,in case of modular inverse you need to replace this 
 // of a number
-let binExp=(x,n,mod=1e9+1)=>{
+let binExp=(x,n,mod=1e9+7)=>{
     let curr=x,result=1
     while(n){ //using binary exponentiation
         if(n&1)
@@ -22,6 +22,18 @@ let binExp=(x,n,mod=1e9+1)=>{
     return result
 }
 
+//bigInt alternative
+let binExp=(x,n,mod=BigInt(1e9+7))=>{
+    let curr=BigInt(x),result=1n
+    n=BigInt(n)
+    while(n){ //using binary exponentiation
+        if(n&1n)
+            result=(result*curr)%mod
+        curr=(curr*curr)%mod
+        n>>=1n
+    }
+    return Number(result)
+}
 console.log(binExp(2,8))
 
 

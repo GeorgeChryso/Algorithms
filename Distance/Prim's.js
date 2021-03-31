@@ -86,94 +86,99 @@ var Prims=(Edges)=>{
 
 
 // with a PQ (minheap)
-class minBinaryHeap{
-    constructor(){
-        this.heap=[]
-        //this is the simplest comparator between a and b and returns 
-        // a positive number if a >b
-        // a negative number if a < b
-        // or 0 when a ===b, 
-        // adjusting this for every situation will allow me to use heaps outside of the 
-        // just numbers context
-        this.comparator=(a,b)=>a-b
+class MaxHeap {
+    constructor(data = []) {
+      this.data = data;
+      this.comparator = (a, b) => b - a;
+      this.heapify();
     }
-
-    hasParent=index=>index>=1
-    getParent=(index)=>this.heap[Math.floor((index-1)/2)]
-    
-    hasLeft=(index)=>2*index+1<=this.heap.length-1
-    getLeftChild=(index)=>this.heap[2*index+1]
-    
-    hasRight=index=>2*index+2<=this.heap.length-1
-    getRightChild=(index)=> this.heap[2*index+2]
-    
-    length=()=>this.heap.length
-
-    peek=()=>this.heap[0]
-
-    push(element){
-        this.heap.push(element)
-        //this element is pushed on the rightmost node of the lowest level
-        // and needs  to be bubbled up accordingly
-        this.bubbleUp(this.heap.length-1)
+  
+    // O(nlog(n)). In fact, O(n)
+    heapify() {
+      if (this.length() < 2) return;
+      for (let i = 1; i < this.length(); i++) {
+        this.bubbleUp(i);
+      }
     }
-
-    bubbleUp(index){
-        //if there is a parent with a bigger priority, switch places with my index
-        while(this.hasParent(index)&&(this.comparator(this.heap[index],this.getParent(index))<0)){
-            //swap the two elements until the Invariant is reached
-            this.swap(index,Math.floor((index-1)/2))
-            // and update the new index to be its parent's index, since u switched the items
-            index=Math.floor((index-1)/2)
+  
+    // O(1)
+    peek() {
+      if (this.length() === 0) return null;
+      return this.data[0];
+    }
+  
+    // O(log(n))
+    push(value) {
+      this.data.push(value);
+      this.bubbleUp(this.length() - 1);
+    }
+  
+    // O(log(n))
+    poll() {
+      if (this.length() === 0) return null;
+      const result = this.data[0];
+      const last = this.data.pop();
+      if (this.length() !== 0) {
+        this.data[0] = last;
+        this.bubbleDown(0);
+      }
+      return result;
+    }
+  
+    // O(log(n))
+    bubbleUp(index) {
+      while (index > 0) {
+        const parentIndex = (index - 1) >> 1;
+        if (this.comparator(this.data[index], this.data[parentIndex]) < 0) {
+          this.swap(index, parentIndex);
+          index = parentIndex;
+        } else {
+          break;
         }
+      }
     }
-
-    //get the highest(lowest) priority element
-    poll(){
-        if(this.length()==1)return this.heap.pop()
-
-        let result=this.heap[0]
-        this.heap[0]=this.heap.pop()
-        this.bubbleDown(0)
-        return result
-    }
-    
-    //after every poll, the new item on place 0 needs to be bubbled down to its correct position
-    bubbleDown(index){
-        if(this.length()<=1)return
-
-        while(this.hasLeft(index)&&(this.comparator(this.heap[index],this.getLeftChild(index))>0||(this.hasRight(index)&&this.comparator(this.heap[index],this.getRightChild(index))>0) )){
-
-            //if there is no right child, swap with the left
-            if(!this.hasRight(index)){
-                this.swap(index,index*2+1)
-                index=index*2+1
-            }
-            else{
-                // if the left child is less than or equal to the right child, choos the left
-                if(this.comparator(this.getLeftChild(index),this.getRightChild(index))<=0){
-                    //and swap
-                    this.swap(index,index*2+1)
-                    index=index*2+1
-                }
-                // else choose the right child
-                else {
-                    //and swap
-                  this.swap(index,index*2+2)
-                  index=index*2+2
-
-                }
-                
-            }
+  
+    // O(log(n))
+    bubbleDown(index) {
+      const lastIndex = this.length() - 1;
+      while (true) {
+        const leftIndex = index * 2 + 1;
+        const rightIndex = index * 2 + 2;
+        let findIndex = index;
+        if (
+          leftIndex <= lastIndex &&
+          this.comparator(this.data[leftIndex], this.data[findIndex]) < 0
+        ) {
+          findIndex = leftIndex;
         }
+        if (
+          rightIndex <= lastIndex &&
+          this.comparator(this.data[rightIndex], this.data[findIndex]) < 0
+        ) {
+          findIndex = rightIndex;
+        }
+        if (index !== findIndex) {
+          this.swap(index, findIndex);
+          index = findIndex;
+        } else {
+          break;
+        }
+      }
     }
-    swap=(a,b)=>{
-        if(a===b)return
-        let temp=this.heap[b]
-        this.heap[b]=this.heap[a]
-        this.heap[a]=temp
+  
+    // O(1)
+    swap(index1, index2) {
+      [this.data[index1], this.data[index2]] = [
+        this.data[index2],
+        this.data[index1]
+      ];
     }
-}
+  
+    // O(1)
+    length() {
+      return this.data.length;
+    }
+  }
 
 // O( (V+E)logV) due to PQ
 // each poll operation is logE
@@ -191,7 +196,7 @@ var Prims=(Edges)=>{
         else
             Adjacency[to][source]=cost
     } 
-    let priorityQueue= new minBinaryHeap(),N=Object.keys(Adjacency).length,result=[]
+    let priorityQueue= new MaxHeap(),N=Object.keys(Adjacency).length,result=[]
     priorityQueue.comparator=([from1,to1,cost1],[from2,to2,cost2])=>cost1-cost2
 
     let visited=new Set(),start=Object.keys(Adjacency)[0]
@@ -204,10 +209,10 @@ var Prims=(Edges)=>{
     while(priorityQueue.heap.length && result.length!=N-1){
         var [fromc,toc,countc]=priorityQueue.poll()
         if(visited.has(toc))
-            continue //continue polling until a valid element is found
+            continue //continue polling until an unvisited destination is found
 
         result.push([fromc,toc,countc])
-        visited.add(toc)
+        visited.add(toc) //visit
 
         //add the correct new nodes
         for (const other in Adjacency[toc]) 
@@ -219,6 +224,31 @@ var Prims=(Edges)=>{
 
     return result
 }
+
+// when we have more than one connected components(trees) aka a forest
+// and we want to find multiple MSTs (all of them)
+let primsForest=(adj)=>{
+    let pq=new MaxHeap() //actually a  minheap :S
+    pq.comparator=(a,b)=>a[1]-b[1]
+    let seen=new Set()
+    for(let i=0;i<n;i++){
+        if(!seen.has(i))
+            pq.push([i,0])
+        while(pq.length()){
+            let [node,val]=pq.poll()
+            if(!seen.has(node)){
+                seen.add(node)
+                result+=val
+                for(let [nei,val] of adj[node])
+                    if(!seen.has(nei))
+                        pq.push([nei,val])
+            }
+        }
+    }
+    return result   
+}
+
+
 console.log(Prims(
         [   
             ['A','B',7],
