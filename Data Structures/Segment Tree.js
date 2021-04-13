@@ -8,7 +8,7 @@
 
 // object based segment trees
 class SegTree{
-    constructor(l,r,A,operation){
+    constructor(l,r,A,operation=(a,b)=>a+b){
         this.leftmost=l,this.rightmost=r,this.sum,
         this.mid=l+((r-l)>>1)
         //change these for different operations
@@ -198,6 +198,19 @@ class ArraySegTree{
         else
             this.pointUpdate(arrIdx,newVal,mid+1,tr,2*idx+1)
         this.t[idx]=this.op(this.left(idx),this.right(idx))
+    }
+    //searches the index where prefix[0,idx]>=x
+    seachPrefixIndex=(x,start=0,end=this.n-1)=>{
+        let s=this.rangeQuery(start,end)
+        if(s<x)
+            return -1
+        if(start===end)
+            return start
+        let mid=start+end>>1,left=this.rangeQuery(start,mid)
+        if( left>=x)
+            return this.seachPrefixIndex(x,start,mid)
+        else
+            return this.seachPrefixIndex(x-left,mid+1,end)
     }
 }
 

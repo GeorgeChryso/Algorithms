@@ -1,7 +1,7 @@
 
 
 
-
+ // nice GCD problem : LC 1819
 //GCD through euclidean theorem
 //in O(log(Min(a,b)))
 let gcd=(a,b)=>{
@@ -13,6 +13,7 @@ let gcd=(a,b)=>{
     }
     return a
 }
+// gcd(0,a)=a, when
 
 console.log(gcd(1180,481))
 
