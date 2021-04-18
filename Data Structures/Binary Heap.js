@@ -185,9 +185,9 @@ class maxBinaryHeap{
 
 // OK COMPLEXITY
 class MaxHeap {
-  constructor(data = []) {
-    this.data = data;
-    this.comparator = (a, b) => b - a;
+  constructor(comparator=null) {
+    this.data 
+    this.comparator = (a, b) => b - a; // Modify this
     this.heapify();
   }
   heapify() {
@@ -240,11 +240,9 @@ class MaxHeap {
     }
   }
   peek=()=>this.data[0]||null
-  // O(1)
   swap(index1, index2) {
     [this.data[index1], this.data[index2]] = [this.data[index2],this.data[index1]];
   }
-  // O(1)
   length=()=>this.data.length;
 }
 
