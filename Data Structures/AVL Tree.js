@@ -3,36 +3,26 @@
 
 // MODIFY THIS EVERY TIME.
 class Node{
-    constructor(val,left=null,right=null,parent=null,balancedFactor=0,height=0){
+    constructor(val,left=null,right=null,parent=null,bf=0,height=0){
         this.val=val
         this.left=left,this.right=right,this.parent=parent
-        this.balancedFactor=balancedFactor,this.height=height
+        this.bf=bf,this.height=height
     }
 }
-
-// CAN ONLY STORE UNIQUE VALUES ( what if the nodes have different characteristics? hmm)
+// CAN ONLY STORE UNIQUE VALUES
 class AVL{
     constructor(){
         this.nodeCount=0
         this.root=null
-        //takes 2 nodes
-        this.comparator=(a,b)=>a.val-b.val
     }
-//-------------U S A B L E------------------\\
-    NODIFY(val){
+//===M O D I F Y   FOR     COMPLEX     NODES==\\
+    NODIFY(val){  //should return a new node based on the stats given
         return new Node(val)
     }
-    contains(node,val){
-        if(node===null)
-            return false
-        let compare=this.comparator(node,val)
-       // console.log(compare,node,val)
-        if(compare<0)
-            return this.contains(node.left,val)
-        if(compare>0)
-            return this.contains(node.right,val)
-        return true
+    comparator=(node1,node2)=>{// basic comparator that returns <0,0,>0 if node1>node2,node1==node2,node1<node2
+        return node1.val-node2.val
     }
+//-------------U S A B L E------------------\\
     //returns true if the value was inserted successfully
     //returns false if the value already exists
     insert(NODE){ //O(logn) 
@@ -59,14 +49,67 @@ class AVL{
         return false
         //rebalance the tree
     }
-
+    has(NODE){
+        NODE=this.NODIFY(NODE)
+        return this.contains(this.root,NODE)
+    }
+    traversalASC(){ //O(n)
+        let result=[]
+        let dfs=(node)=>{
+            if(!node)
+                return
+            dfs(node.left)
+            result.push(node)
+            dfs(node.right)
+        }
+        dfs(this.root)
+        return result
+    }
+    findNextSmaller(NODE){
+        NODE=this.NODIFY(NODE)
+        let cur=this.root,result=null
+        while(cur!==null){
+            if(this.comparator(cur,NODE)<0)
+                result=cur,
+                cur=cur.right
+            else
+                cur=cur.left
+        }
+        if(result===null)
+            return false // no such element
+        return result
+    }
+    findNextBigger(NODE){
+        NODE=this.NODIFY(NODE)
+        let cur=this.root,result=null
+        while(cur!==null){
+            if(this.comparator(cur,NODE)<=0)
+                cur=cur.right
+            else
+                result=cur,
+                cur=cur.left
+        }
+        if(result===null)
+            return false // no such element
+        return result
+    }
 //--------- I N T E R N A L S -----------------\\
+    contains(node,val){
+        if(node===null)
+            return false
+        let compare=this.comparator(node,val)
+        if(compare<0) //node<val
+            return this.contains(node.right,val)
+        if(compare>0)
+            return this.contains(node.left,val)
+        return true
+    }
     //inserts newNode to target node
     ins(tree,value){
         if(tree===null)
             return value
         //(target is bigger? insert it to the left): else to the right
-        if(this.comparator(value,tree.val)>0)
+        if(this.comparator(tree,value)>0)
             tree.left=this.ins(tree.left,value)
         else
             tree.right=this.ins(tree.right,value)
@@ -92,12 +135,10 @@ class AVL{
             else{ //still has both subtrees? 
                 if(node.left.height>node.right.height){
                     let successor=this.findMax(node.left)/////
-                    node.val=successor/////////////////////////////////
                     node.left=this.rem(node.left,successor)
                 }   
                 else{
                     let successor=this.findMin(node.right)
-                    node.val=successor
                     node.right=this.rem(node.right,successor)
                 }
             }
@@ -105,6 +146,7 @@ class AVL{
         this.update(node)
         return this.rebalance(node)
     }
+    //find the min and max node of the subtree rooted at (node)
     findMin=(node)=>node.left?this.findMin(node.left):node
     findMax=(node)=>node.right?this.findMax(node.right):node
     //balances the subtree rooted at node if it is imbalanced (has balancefactor=+-2)
@@ -116,7 +158,7 @@ class AVL{
             else
                 return this.LR(node)
         }
-        else if(node.bf===2){
+        else if(node.bf==2){
             if(node.right.bf>=0)
                 return this.RR(node)
             else
@@ -126,13 +168,9 @@ class AVL{
     }
     //update the balance factor and the height of the current node
     update(node){ 
-        let leftHeight=-1,rightHeight=-1
-        if(node.left)
-            leftHeight=node.left.height
-        if(node.right)
-            rightHeight=node.right.height
+        let leftHeight=node.left!==null?node.left.height:-1,rightHeight=node.right!==null?node.right.height:-1
         node.height=Math.max(leftHeight,rightHeight)+1
-        node.balancedFactor=rightHeight-leftHeight
+        node.bf=rightHeight-leftHeight
     }
 
     //4 cases of unbalanced trees
@@ -168,4 +206,8 @@ class AVL{
 
 
 let S=new AVL()
+for(let k of [1,2,4,500])
+    S.insert(k)
 
+console.log(S.root)
+console.log(S.findNextSmaller(4).val,S.findNextBigger(4).val)
