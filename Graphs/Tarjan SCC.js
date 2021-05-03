@@ -38,7 +38,7 @@ var criticalConnections = function(n, EDGES) {
         })
         //this finds bridges (EDGES between strongly conn components)
         adj[node].forEach(child=>{
-             if(lowestIdReachable[child]!==undefined && lowestIdReachable[child]!==lowestIdReachable[node]&&!seen.has(child))
+            if(lowestIdReachable[child]!==undefined && lowestIdReachable[child]!==lowestIdReachable[node]&&!seen.has(child))
                 bridges.push([child,node])
         })
         //node is the root of the scc

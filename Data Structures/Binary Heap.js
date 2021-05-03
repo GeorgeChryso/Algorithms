@@ -186,7 +186,7 @@ class maxBinaryHeap{
 // OK COMPLEXITY
 class MaxHeap {
   constructor(comparator=null) {
-    this.data 
+    this.data=[]
     this.comparator = (a, b) => b - a; // Modify this
     this.heapify();
   }

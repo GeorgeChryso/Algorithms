@@ -7,12 +7,12 @@
 // Naive 
 // A divisor of x can be a number less than sqrt(x)
 // so i am searching for a divisor in the range [2,sqrt(x)] checking %
-// Complexity O(n)
+// Complexity O(sqrt(n))
 let isPrime=n=>{
-    for (let candidate = 0; candidate <= Math.sqrt(n); candidate++) 
+    for (let candidate = 2; candidate <= Math.sqrt(n); candidate++) 
         if(n%candidate==0)
-            return true   
-    return false
+            return false  
+    return true
 }
 // The above naive implementations can have multiple optimizations:
 // i.e: checking just the odds, etc

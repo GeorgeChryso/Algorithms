@@ -291,6 +291,42 @@ console.log(S.pointQuery(1))
 // when you cant build the actual array (tree) (TOO LARGE SIZE), but know that It is filled with some value 
 // aka create vertices on the go only when you need them.
 
+
+class ISTnode{
+    constructor(l,r){
+        //the sum holds the cumulative sum of the interval[l,r]
+        this.l=l,this.r=r,this.sum=0  
+        this.leftChild,this.rightChild
+    }
+    extend(){
+        // only create a left and right child when l+1<r 
+        if(!this.leftChild&&this.l!==this.r){
+            let mid=this.l+this.r>>1
+            this.leftChild=new ISTnode(this.l,mid)
+            this.rightChild=new ISTnode(mid+1,this.r)
+        }
+        this.sum=this.leftChild.sum+this.rightChild.sum
+    }
+    pointUpdate(i,val){ //propagate the update to the children
+        if(this.l===this.r)
+            return this.sum=val
+        this.extend()
+        if(i<=this.leftChild.r)
+            this.leftChild.pointUpdate(i,val)
+        else
+            this.rightChild.pointUpdate(i,val)
+        this.sum=this.leftChild.sum+this.rightChild.sum
+    }
+    rangeQuery(lo,hi){ //keep going until you find intervals that completely cover my query[lo,hi]
+        if(lo<=this.l && this.r<=hi)
+            return this.sum
+        if(lo>this.r||hi<this.l)
+            return 0
+        if(!this.leftChild)
+            return 0
+        return this.leftChild.rangeQuery(lo,hi)+this.rightChild.rangeQuery(lo,hi)
+    }   
+}
 //point update range query
 // nlogM where n is the number of queries and M is the biggest highpoint of my interval
 class ISTnode{
@@ -300,12 +336,12 @@ class ISTnode{
         this.leftChild,this.rightChild
     }
     extend(){
-            // only create a left and right child when l+1<r 
-            if(!this.leftChild&&this.l+1<this.r){
-                let mid=this.l+this.r>>1
-                this.leftChild=new ISTnode(this.l,mid)
-                this.rightChild=new ISTnode(mid+1,this.r)
-            }
+        // only create a left and right child when l+1<r 
+        if(!this.leftChild&&this.l+1<this.r){
+            let mid=this.l+this.r>>1
+            this.leftChild=new ISTnode(this.l,mid)
+            this.rightChild=new ISTnode(mid+1,this.r)
+        }
     }
     pointUpdate(i,val){ //propagate the update to the children 
         this.extend()
@@ -315,7 +351,6 @@ class ISTnode{
                 this.leftChild.pointUpdate(i,val)
             else
                 this.rightChild.pointUpdate(i,val)
-        
     }
     rangeQuery(lo,hi){ //keep going until you find intervals that completely cover my query[lo,hi]
         if(lo<=this.l && this.r<=hi)

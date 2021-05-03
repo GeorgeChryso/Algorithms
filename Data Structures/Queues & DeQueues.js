@@ -10,7 +10,8 @@ class Queue{
 
     //remove the element that was pushed first
     pop=()=>{
-        if(this.length())return this.arr.shift()
+        if(this.length()
+            )return this.arr.shift()
         return null
     }
 
