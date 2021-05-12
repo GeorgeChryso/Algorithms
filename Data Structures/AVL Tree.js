@@ -7,6 +7,7 @@ class Node{
         this.val=val
         this.left=left,this.right=right,this.parent=parent
         this.bf=bf,this.height=height
+        this.SubTreeNodes=1
     }
 }
 // CAN ONLY STORE UNIQUE VALUES
@@ -93,6 +94,11 @@ class AVL{
             return false // no such element
         return result
     }
+    findKthelement(k){
+        if(this.nodeCount<k)
+            return null
+        return this.findKth(this.root,k)
+    }
 //--------- I N T E R N A L S -----------------\\
     contains(node,val){
         if(node===null)
@@ -135,10 +141,12 @@ class AVL{
             else{ //still has both subtrees? 
                 if(node.left.height>node.right.height){
                     let successor=this.findMax(node.left)/////
+                    node.val=successor.val
                     node.left=this.rem(node.left,successor)
                 }   
                 else{
                     let successor=this.findMin(node.right)
+                    node.val=successor.val
                     node.right=this.rem(node.right,successor)
                 }
             }
@@ -171,6 +179,7 @@ class AVL{
         let leftHeight=node.left!==null?node.left.height:-1,rightHeight=node.right!==null?node.right.height:-1
         node.height=Math.max(leftHeight,rightHeight)+1
         node.bf=rightHeight-leftHeight
+        node.SubTreeNodes=1+(node.left===null?0:node.left.SubTreeNodes )+(node.right===null?0:node.right.SubTreeNodes)
     }
 
     //4 cases of unbalanced trees
@@ -201,13 +210,17 @@ class AVL{
         this.update(newParent)
         return newParent
     }
-
+    findKth(node,k){
+        let leftCount=node.left?node.left.SubTreeNodes:0
+        if(leftCount+1===k)
+            return node.val
+        if(leftCount+1<k)
+            return this.findKth(node.right,k-leftCount-1)
+        return this.findKth(node.left,k)
+    }
 }
 
 
 let S=new AVL()
-for(let k of [1,2,4,500])
+for(let k of [1,2,3])
     S.insert(k)
-
-console.log(S.root)
-console.log(S.findNextSmaller(4).val,S.findNextBigger(4).val)
