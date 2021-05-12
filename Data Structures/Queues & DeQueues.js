@@ -44,11 +44,13 @@ class Node{
 }
 class DEQueue{
     constructor(){
-        this.start=this.end=null,this.size=0     
+        this.start=this.end=null,this.size=0,
+        this.freq={}    
     }
     length=()=>this.size
     push(element){
         this.size++
+        this.freq[element]=(this.freq[element]||0)+1
         if(this.start===null)
             return this.start=this.end=new Node(element)
         let newEnd=new Node(element,this.end)
@@ -57,6 +59,7 @@ class DEQueue{
     }
     unshift(element){
         this.size++
+        this.freq[element]=(this.freq[element]||0)+1
         if(this.start===null)
             return this.start=this.end=new Node(element)
         let newStart=new Node(element,null,this.start)
@@ -64,6 +67,7 @@ class DEQueue{
         this.start=newStart
     }
     pop(){
+        this.freq[this.end.val]--
         this.size--
         let toreturn=this.end.val
         this.end=this.end.prev
@@ -75,12 +79,16 @@ class DEQueue{
     }
     shift(){
         this.size--
-        let toreturn=this.end.val
+        this.freq[this.start.val]--
+        let toreturn=this.start.val
         this.start=this.start.next
         if(this.start===null)
             this.end=null
         else
             this.start.prev=null
         return toreturn
+    }
+    has(val){
+        return this.freq[val]!==undefined&&this.freq[val]>0
     }
 }

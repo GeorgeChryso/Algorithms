@@ -329,6 +329,7 @@ class ISTnode{
 }
 //point update range query
 // nlogM where n is the number of queries and M is the biggest highpoint of my interval
+// NEEDS REMAKE
 class ISTnode{
     constructor(l,r){
         //the sum holds the cumulative sum of the interval[l,r]

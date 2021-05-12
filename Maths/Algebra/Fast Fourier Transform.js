@@ -56,11 +56,12 @@ let MultiplyPolys=(A,B)=>{
 }
 
 console.log(MultiplyPolys(
-    [5,0,0,-2 ,4],[3,0,1]
+    [5,0,0,2 ,4],[3,0,1]
 ))
 
 
 // Multiply 2 LONG NUMBERS in O(nlogn)
+// NUMBERS ARE IN REVERSE 321=>[1,2,3]
 let multiplyLongArithm=(A,B,base=10)=>{
     let result=MultiplyPolys(A,B),n=result.length,carry=0
     for(let i=0;i<n;i++)
@@ -74,7 +75,7 @@ let multiplyLongArithm=(A,B,base=10)=>{
 
 console.log(multiplyLongArithm(
         [1,2,3],[3,2],10
-))
+),321*23)
 
 
 

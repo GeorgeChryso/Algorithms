@@ -97,3 +97,5 @@ console.log(5,leftmostsetbit(5))
 
 
 
+//check if a is contained in b
+// a&b<a

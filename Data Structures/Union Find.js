@@ -147,3 +147,11 @@ class DS {
     }
     sameGroup=(A,B)=>this.find(A)==this.find(B)
   }
+
+
+
+  // Good for: 
+  // Painting contiguous subarrays (OFFLINE):
+  // Given queries [L,R,color] , you paint the subarray [L,R] with that color
+  // then you need to query a point for its final color
+  
