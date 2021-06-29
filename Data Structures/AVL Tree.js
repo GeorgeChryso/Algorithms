@@ -1,24 +1,27 @@
 
 
 
-// MODIFY THIS EVERY TIME.
-class Node{
-    constructor(val,left=null,right=null,parent=null,bf=0,height=0){
-        this.val=val
-        this.left=left,this.right=right,this.parent=parent
-        this.bf=bf,this.height=height
-        this.SubTreeNodes=1
-    }
-}
+
 // CAN ONLY STORE UNIQUE VALUES
 class AVL{
     constructor(){
         this.nodeCount=0
         this.root=null
+
+        // MODIFY THIS EVERY TIME.
+        this.NODE=new class{
+            constructor(val,left=null,right=null,parent=null,bf=0,height=0){
+                this.val=val
+                this.left=left,this.right=right,this.parent=parent
+                this.bf=bf,this.height=height
+                this.SubTreeNodes=1
+            }
+        }
     }
+    
 //===M O D I F Y   FOR     COMPLEX     NODES==\\
     NODIFY(val){  //should return a new node based on the stats given
-        return new Node(val)
+        return new this.NODE(val)
     }
     comparator=(node1,node2)=>{// basic comparator that returns <0,0,>0 if node1>node2,node1==node2,node1<node2
         return node1.val-node2.val
@@ -94,11 +97,13 @@ class AVL{
             return false // no such element
         return result
     }
-    findKthelement(k){
+    findKthNODE(k){ //RETURNS THE NODE, NOT THE VALUE
         if(this.nodeCount<k)
             return null
         return this.findKth(this.root,k)
     }
+    min=()=>this.findMin(this.root).val
+    max=()=>this.findMax(this.root).val
 //--------- I N T E R N A L S -----------------\\
     contains(node,val){
         if(node===null)

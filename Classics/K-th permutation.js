@@ -35,7 +35,7 @@ var getKthPermutation = function(A,k) {
    Things that can dramatically affect the problem's solution:
        1)  The elements are distinct => can be solved in O(n^2)
 */
-// O(n^2)
+// O(n^2) //notice that O(n^2) is way better than O(nk) because k can go up to n!
 let kthPermutation=(A,k)=>{
     let n=A.length,fact=[1,1],result=[]
     for(let i=2;i<=n;i++)
@@ -285,5 +285,38 @@ let kthPerm=(A,k)=>{
 
 /*
     2) There can be repetition of elements
-    // USE a freq hashset and an AVL tree for fast removals/insertions
-*/
+    //O(n^2)
+/*/
+let kthPermRep=(A,k)=>{
+    let n=A.length,fact=[1],res=[],freq={}
+    for(let i=1;i<=n;i++)
+        fact.push(fact[fact.length-1]*i),
+        freq[A[i-1]]=(freq[A[i-1]]||0)+1
+    A.sort((a,b)=>a-b)// or other criteria
+    for(let q=0;q<n;q++){
+        let times=fact[n-1-q],sum=0
+            D=Array.from(new Set(A))
+        D.forEach(d=>{
+            if(freq[d]>1)
+                times/=fact[freq[d]]
+        })
+        for(let i=0;i<D.length;i++){
+            let candidate=D[i],val=times
+            if(freq[candidate]>1)
+                val*=freq[candidate]
+            if(sum+val>=k){
+                res.push(candidate)
+                freq[candidate]--
+                A.splice(A.indexOf(candidate),1)
+                k-=sum
+                break
+            }
+            sum+=val
+        }        
+    }
+    return res
+}
+for(let i=1;i<25;i++)
+console.log(parseInt(kthPermRep([1,1,1,1,1,0,0,0,1,1,0],i).join(''),2)+'')
+
+

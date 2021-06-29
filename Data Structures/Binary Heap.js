@@ -2,7 +2,7 @@
 
 //minheap TRASH COMPLEXITY
 class minBinaryHeap{
-    constructor(){
+    constructor(c){
         this.heap=[]
         //this is the simplest comparator between a and b and returns 
         // a positive number if a >b
@@ -10,7 +10,7 @@ class minBinaryHeap{
         // or 0 when a ===b, 
         // adjusting this for every situation will allow me to use heaps outside of the 
         // just numbers context
-        this.comparator=(a,b)=>a-b
+        this.comparator=c
     }
 
     hasParent=index=>index>=1
