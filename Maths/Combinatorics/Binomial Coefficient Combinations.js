@@ -73,7 +73,7 @@ var modInverse=(a,b)=>{
 //THIS WORKS FOR 1E9+7
 var combinationsModP=(N,K,P=1e9+7)=>{ //SINGLE QUERY O(logP)
     // IF WE WANT SINGLE QUERIES WE CAN DO IT IN O(LogP)=> O(N+ Q*logP) for Q queries
-    return  ((factorial[N] * modInverse(factorial[K],P)) %P  *modInverse(factorial[N - K],P))% P ;
+    return  ((factorial[N] * modInverse(factorial[K],P)) %P  * modInverse(factorial[N - K],P) )% P ;
 }
 console.log(combinationsModP(61,4,43787))
 

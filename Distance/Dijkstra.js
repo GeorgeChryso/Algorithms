@@ -239,3 +239,18 @@ console.log(dijkstras(
     
 ))
 
+
+
+// O(n^2) Dijkstra's
+// find the shortest distance from a source to every other node
+
+// Regular Dijkstars" O( (M+N)logN)
+
+//But if we have a complete graph this deteriorates to O(N^2LOGN)
+
+
+
+// Store the candidate distance to every node
+// The distance to adj node is the distance themselves
+// look at all the nodes and fix the distances, the next node is the adj node that's closest
+

@@ -116,7 +116,7 @@ console.log(FMLT(43,10007))
 
 
 //FIND THE MODULAR INVERSE FOR EVERY NUMBER MODULO M => M has to be PRIMEEEE
-// In O(Mod)
+// In O(Mod) obivously tles for (1e9+7)
 let modularInverses=(MOD=1e9+7)=>{
     let ModInverse=[...Array(MOD)]
     ModInverse[1]=1
@@ -126,3 +126,19 @@ let modularInverses=(MOD=1e9+7)=>{
 }
 
 console.log(modularInverses())
+
+
+
+// Alternative
+let power=( x,  y,  m=1e9+7)=>{
+    if (y == 0)
+        return 1;
+    let p = power(x, y / 2, m) % m;
+    p = (p * p) % m
+    if (y % 2 == 0)
+        return p;
+    return (x * p) % m
+}
+let modInverse=( a,  m=1e9+7)=> {
+    return power(a, m - 2, m);
+}
