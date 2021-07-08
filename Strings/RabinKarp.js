@@ -82,25 +82,18 @@ var RabinKarp=(pattern,string)=>{
     let patValue=0, curValue=0, result=[] //holds the starting indexes of the matches
 
     //rolling  window of size m 
-    for (let i = 0; i <= n; i++) {
+    for (let i = 0; i < n; i++) 
        //calculate the sum of the hashed letters of my pattern and the first m letters of my string 
-        if(i<m){
-            curValue+=hash(string[i],i)
+        if(i<m)
+            curValue+=hash(string[i],i),
             patValue+=hash(pattern[i],i) 
-        }
         //windowSize===m  sliding the window 
         else{
-
             let hashValueP=patValue%prime, hashValueCurr= curValue%prime;
-            
-            if (hashValueP===hashValueCurr){ //consider equality for the PREVIOUS i as the LAST ELEMENT
-                //check for equality first
-                if(pattern===string.slice(i-m,i))result.push(i-m)//??
-            }
-            if(i===n)break //consider the last window 
+            if (hashValueP===hashValueCurr&&pattern===string.slice(i-m,i))//consider equality for the PREVIOUS i as the LAST ELEMENT
+                result.push(i-m)//??
             curValue= (curValue-hash(string[i-m],0))*base+hash(string[i],m-1)     
         }
-    }
 
     return result 
 }
@@ -108,3 +101,9 @@ var RabinKarp=(pattern,string)=>{
 console.log(RabinKarp(
     'AAABA','AAAABAAAAABAAAAAAZBAZZAAAABBAAAABBAAAABAAAA'
 ))
+
+/* 
+    Notes: 
+    Prefix Hash is a thing, and returns the hash for the substring :A[i...j] as 
+    (H(:j+1)-H(:i)) / power**i =  (H(:j+1)-H(:i)) * powerInverse**i 
+*/

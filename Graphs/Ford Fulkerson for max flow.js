@@ -86,7 +86,6 @@ let FF=(source,target)=>{
             for(let next of adj[i])
                 if(group[i]!==group[next])
                     minCutEdges.push( [i,next])
-                    
     console.log(minCutEdges)
     return totalFlow
 }
