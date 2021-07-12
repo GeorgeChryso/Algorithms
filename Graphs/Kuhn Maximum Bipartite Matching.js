@@ -1,5 +1,5 @@
 
-
+// MAXIMUM CARDINALITY OF EDGES SUC H THAT NO 2 EDGES SHARE A VERTEX
 // So this is a bit different to Min Cost Max Flow
 // I'm given a nxm bipartite graph, and I want to find as many edges as I can, 
 // such that no edge shares a vertex. There is no cost associated with the edges here, I just want to
@@ -14,7 +14,13 @@
 // 2. while an augmenting path exists(search through dfs/bfs), update it
 // 3. return the maximum matching
 
-
+let example=[
+    [0,2],
+    [3,4],
+    [1,2],
+    [2,3],
+    [2]
+]
 
 // Runtime O(N^2*M), where N are the vertices of the first part, and M the vertices of the second part
 // SO IT IS ALWAYS AN OPTION TO REVERSE THE GRAPH FOR BETTER COMPLEXITY
@@ -33,7 +39,7 @@ let KuhnMBM=(n,k,adj)=>{
         seen.add(v)
         if(adj[v])
             for(let nei of adj[v])
-                if(matching[nei]===-1 || dfs( matching[nei])){
+                if(matching[nei]===-1 || dfs(matching[nei])){
                     matching[nei]=v
                     return true
                 }
@@ -45,3 +51,4 @@ let KuhnMBM=(n,k,adj)=>{
     return matching
 }
 
+console.log(KuhnMBM(5,5,example))

@@ -84,7 +84,6 @@ let HopcroftMBM=(n,m,adjU)=>{
             return false
         }
         unmatchedV.forEach(v=>dfs(v,0,new Set(),new Set()))
-        console.log(Matching)
     }
     return Matching
 }
