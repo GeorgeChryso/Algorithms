@@ -58,6 +58,7 @@ let HopcroftMBM=(n,m,adjU)=>{
         unmatchedU=new Set([...Array(n)].map((d,i)=>i))
     while(true){
         //do alternating bfs (from every unmatched vertex from U) until you find an UNMATCHED vertex from V
+        // Essentially you are trying to find an augmenting alternating path
         let q=[...Array.from(unmatchedU)],isU=1,unmatchedV=new Set(),
             seenU=new Set(q),seenV=new Set()
         while(q.length && unmatchedV.size===0){
@@ -72,7 +73,7 @@ let HopcroftMBM=(n,m,adjU)=>{
                     } 
             q=[...Array.from(temp)],isU^=1
         }
-        if(unmatchedV.size===0)
+        if(unmatchedV.size===0)// if no augmenting path was found, terminate
             break
         //from each UNMATCHED VERTEX from V found, perform an ALTERNATING dfs to find augmenting paths
         seenU=new Set(),seenV=new Set()
