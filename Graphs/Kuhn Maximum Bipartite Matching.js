@@ -20,7 +20,14 @@ let example=[
     [1,2],
     [2,3],
     [2]
-]
+],
+ex2=[
+    [ 1 ],          [ 3, 4, 6, 8 ],
+    [ 0, 3, 7 ],    [ 3, 4, 6, 8 ],
+    [ 2, 5, 6, 9 ], [ 3, 6 ],
+    [ 1, 5 ],       [ 0 ],
+    [ 0, 7 ],       [ 8 ]
+  ]
 
 // Runtime O(N^2*M), where N are the vertices of the first part, and M the vertices of the second part
 // SO IT IS ALWAYS AN OPTION TO REVERSE THE GRAPH FOR BETTER COMPLEXITY
@@ -52,3 +59,4 @@ let KuhnMBM=(n,k,adj)=>{
 }
 
 console.log(KuhnMBM(5,5,example))
+console.log(KuhnMBM(10,10,ex2))

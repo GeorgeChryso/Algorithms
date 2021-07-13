@@ -8,7 +8,41 @@ let example=[ [15,10,9],
               [9,15,10],
               [10,12,8] ]
 let example2=[ [9,2,7,8],[6,4,3,7],[5,8,1,8],[7,6,9,4]],
-    example3=[ [5,7,11,6,7],[8,5,5,6,5],[6,7,10,7,3],[10,4,8,2,4]]
+    example3=[ [5,7,11,6,7],[8,5,5,6,5],[6,7,10,7,3],[10,4,8,2,4]],
+    ex4=[
+        [
+          120, 23, 99, 28,
+          110, 23, 88, 97
+        ],
+        [
+          127, 16, 100,  27,
+          105, 16,  95, 102
+        ],
+        [
+          100, 11, 127,   0,
+          114, 11,  68, 125
+        ],
+        [
+          18, 125,  9, 118,
+           4, 125, 50,  11
+        ],
+        [
+          100, 11, 127,   0,
+          114, 11,  68, 125
+        ],
+        [
+          113, 30, 106,  21,
+          103, 30,  81, 104
+        ],
+        [
+          60, 83, 39, 88,
+          42, 83, 28, 37
+        ],
+        [
+           2, 109, 25, 102,
+          20, 109, 34,  27
+        ]
+      ]
 
 // O(N^4) ( or 5 with Kuhn)
 // Input( nxm matrix) where adj[i][j] is the cost of the edgefrom i to j 
@@ -45,11 +79,11 @@ let HungarianMBM1=(adjU)=>{
         // ******************************** CONSTRUCT THE MINIMUM VERTEX COVER.............
         // Construct the minimum vertex cover, having the maxMatching, through Konig's theorem
         //  ->1.orient the edges: from matching L<-R ,else (L->R)
-        let L=[...Array(n)],R=[...Array(m)]
+        let L=[...Array(n)].map(d=>[]),R=[...Array(m)].map(d=>[])
         for(let i=0;i<n;i++)
             if(G[i])
             for(let j of G[i])
-                if(maxMatching[j]!==-1)
+                if(maxMatching[j]===i)
                     R[j].push(i)
                 else
                     L[i].push(j)
@@ -63,7 +97,7 @@ let HungarianMBM1=(adjU)=>{
             memo.add(node)
             if(adj[node])
                 for(let nei of adj[node])
-                    dfs(nei,isL^1) 
+                    explore(nei,isL^1) 
         }
         for(let i=0;i<n;i++)
             if(!matchedL.has(i))
@@ -71,8 +105,8 @@ let HungarianMBM1=(adjU)=>{
 
         let MinVertexCover=[ new Set(),new Set()] // [ [nodes from left],[nodes from right]]
         for(let i=0;i<n;i++)
-            if(!Z.has(i))
-                MinVertexCover[0].add(i)
+            if(!Z[0].has(i))
+            MinVertexCover[0].add(i)
         MinVertexCover[1]=Z[1]
 
         //******************************* ......................................................
@@ -127,51 +161,44 @@ let HopcroftMBM=(n,m,adjU)=>{
     while(true){
         //do alternating bfs (from every unmatched vertex from U) until you find an UNMATCHED vertex from V
         let q=[...Array.from(unmatchedU)],isU=1,unmatchedV=new Set(),
-            seenU=new Set(),seenV=new Set() 
+            seenU=new Set(q),seenV=new Set()
         while(q.length && unmatchedV.size===0){
             let adj=isU?adjU:adjV,temp=new Set(),
-                seen=isU?seenU:seenV,memo=isU?seenV:seenU
-            for(let node of q){
-                seen.add(node)
+                seen=isU?seenV:seenU
+            for(let node of q)
                 for(let nei of adj[node])
-                    if(!memo.has(nei)){
-                        if(isU&&Matching[nei]===node) //ALTERNATING EDGES, from U always use unmatched edges.
-                            continue
+                    if(!seen.has(nei) && ((isU&& Matching[nei]!==node ) || (isU==0&& Matching[node]===nei))){
                         if(isU&&(Matching[nei]===-1))
                             unmatchedV.add(nei)
-                        temp.add(nei)
+                        temp.add(nei),seen.add(nei)
                     } 
-            }
             q=[...Array.from(temp)],isU^=1
         }
         if(unmatchedV.size===0)
             break
-        //from each UNMATCHED VERTEX from V found, perform a dfs to find augmenting paths
+        //from each UNMATCHED VERTEX from V found, perform an ALTERNATING dfs to find augmenting paths
         seenU=new Set(),seenV=new Set()
-        let dfs=(node,isU=0,procU,procV)=>{
-            let adj=isU?adjU:adjV,proc=isU?procU:procV
-            if((isU&&seenU.has(node)) || (isU===0&&seenV.has(node)) || proc.has(node))
-                return false
-            proc.add(node)
-            if(isU&&unmatchedU.has(node))
-                return true
-            for(let nei of adj[node])
-                // at U? > only used Edges
-                // at V? > only unused Edges
-                if(((isU===0&&Matching[node]!==nei)||(isU===1&&Matching[nei]==node)) && dfs(nei,isU^1,procU,procV)){
-                    if(isU===0)
-                        Matching[node]=nei,
-                        seenU.add(nei),
-                        seenV.add(node),
-                        unmatchedU.delete(nei)
+        let dfs=(node,isU=0)=>{
+            let adj=isU?adjU:adjV,seen=isU?seenU:seenV
+            if(!seen.has(node)){
+                seen.add(node)
+                if(isU&&unmatchedU.has(node))
                     return true
-                }    
+                for(let nei of adj[node])
+                    // at V? > only unused Edges // at U? > only used Edges
+                    if(((isU===0&&Matching[node]!==nei)||(isU===1&&Matching[nei]===node)) &&dfs(nei,isU^1)){
+                        if(isU===0)
+                            Matching[node]=nei,
+                            unmatchedU.delete(nei)
+                        return true
+                    }    
+            }
             return false
         }
-        unmatchedV.forEach(v=>dfs(v,0,new Set(),new Set()))
+        unmatchedV.forEach(v=>dfs(v,0))
     }
     return Matching
 }
 
 
-console.log(HungarianMBM1(example3))
+console.log(HungarianMBM1(ex4))
