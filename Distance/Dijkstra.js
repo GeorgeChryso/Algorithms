@@ -253,4 +253,29 @@ console.log(dijkstras(
 // Store the candidate distance to every node
 // The distance to adj node is the distance themselves
 // look at all the nodes and fix the distances, the next node is the adj node that's closest
-
+let example=[[0,1,4,3],
+            [1,0,1,1],
+            [4,1,0,1],
+            [3,1,1,0]]
+//O(n^2) 
+let dijkstrasO=(adj,source)=>{
+    let n=adj.length,distanceFromSource=[...Array(n)].map(d=>Infinity),
+        resultDistanceFromSource=[...Array(n)].map(d=>Infinity)
+    distanceFromSource[source]=0
+    for(let k=0;k<n;k++){
+        //find the node with the minimum distance from source that's NOT finalized
+        let minNode,minDist=Infinity
+        for(let i=0;i<n;i++)
+            if(resultDistanceFromSource[i]===Infinity && distanceFromSource[i]<minDist)
+                minNode=i,minDist=distanceFromSource[i]
+        if(minDist===Infinity)
+            break
+        resultDistanceFromSource[minNode]=minDist// finalize it 
+        //make neighbors available
+        for(let nei=0;nei<n;nei++)
+            distanceFromSource[nei]=Math.min(distanceFromSource[nei],minDist+adj[minNode][nei])
+        distanceFromSource[minNode]=minNode
+    }
+    return resultDistanceFromSource
+}
+console.log(dijkstrasO(example,0))

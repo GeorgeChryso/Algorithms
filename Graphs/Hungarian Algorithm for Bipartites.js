@@ -9,7 +9,7 @@ let example=[ [15,10,9],
               [10,12,8] ]
 let example2=[ [9,2,7,8],[6,4,3,7],[5,8,1,8],[7,6,9,4]],
     example3=[ [5,7,11,6,7],[8,5,5,6,5],[6,7,10,7,3],[10,4,8,2,4]],
-    ex4=[
+    example4=[
         [
           120, 23, 99, 28,
           110, 23, 88, 97
@@ -48,7 +48,7 @@ let example2=[ [9,2,7,8],[6,4,3,7],[5,8,1,8],[7,6,9,4]],
 // Input( nxm matrix) where adj[i][j] is the cost of the edgefrom i to j 
 // Output: Matching[j]=i or -1 if no matchinge exists for the RIGHT node j 
 // i belongs to the left part of the ALREADY BIPARTITE GRAPH and j to the right
-let HungarianMBM1=(adjU)=>{
+let HungarianAssignmentMinimization=(adjU)=>{
     //Step 0, create 0-cost edges by deleting the minimum from each row and column
     let n=adjU.length,m=adjU[0].length  
     for(let i=0;i<n;i++){
@@ -178,4 +178,47 @@ let KonigMinVertexCover=(n,m,G,maxMatching)=>{
 }
 
 
-console.log(HungarianMBM1(ex4))
+console.log(HungarianAssignmentMinimization(example4))
+
+//RETURNS [Matching[j]=i, minCost]
+// N<=M
+// Takes O(N*N*M)
+let HunFast=(GRAPH)=>{
+    let a=[...Array(GRAPH.length)].map((d,i)=>[...GRAPH[i]])
+    let A=(len)=>[...Array(len)].map(d=>0)
+    a.unshift(A(a[0].length))
+    for(let i=0;i< a.length;i++)
+        a[i].unshift(0)
+    let n=a.length-1,m=a[0].length-1,u=A(n+1), v=A(m+1), p=A(m+1), way=A(m+1);
+    for (let i=1; i<=n; i++) {
+        p[0] = i;
+        var j0 = 0,minv=A(m+1).map(d=>Infinity),used=A(m+1).map(d=>false)
+        do {
+            used[j0] = true;
+            var i0 = p[j0] ,  delta = Infinity,  j1;
+            for (let j=1; j<=m;j++)
+                if (!used[j]) {
+                    let cur = a[i0][j]-u[i0]-v[j];
+                    if (cur < minv[j])
+                        minv[j] = cur,  way[j] = j0;
+                    if (minv[j] < delta)
+                        delta = minv[j],  j1 = j;
+                }
+            for (let j=0; j<=m;j++)
+                if (used[j])
+                    u[p[j]] += delta,  v[j] -= delta;
+                else
+                    minv[j] -= delta;
+            j0 = j1;
+        } while (p[j0] != 0);
+        do {
+            let j1 = way[j0];
+            p[j0] = p[j1],j0 = j1
+        } while (j0);
+    }
+    let Matching=[...Array(m)],minCost=-v[0]
+    for (let j=1; j<=m; ++j)
+	    Matching[j] = p[j];
+    return [Matching.slice(1).map(d=>d-1),minCost]
+}
+console.log(HunFast(example4))
