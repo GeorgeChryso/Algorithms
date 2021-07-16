@@ -10,25 +10,21 @@
 //Input nodes are NUMBERS:
 // O(n)
 let Kosaraju=next=>{
-    let topoSort=topoSortDFS(next),T=transpose(next)
-    let SCC=[],seen=new Set()
+    let topoSort=topoSortDFS(next),T=transpose(next),
+        SCC=[],seen=new Set()
     let dfs=(node,component)=>{
-        node=Number(node)
         if(!seen.has(node)){
-            SCC.push()
             seen.add(node)
-            if(T[node]&&T[node].size)//change if children array
-                T[node].forEach(child=>dfs(Number(child),component))
+            if(T[node])//change if children array
+                for(let nei of T[node])
+                    dfs(nei,component)
             component.push(node)
         }
     }
-    topoSort.forEach(node=>{
-        node=Number(node)
-        if(!seen.has(node)){
-            SCC.push([])
+    for(let node of topoSort)
+        if(!seen.has(node))
+            SCC.push([]),
             dfs(node,SCC[SCC.length-1])
-        }
-    })
     return SCC
 }
 let topoSortDFS=next=>{
