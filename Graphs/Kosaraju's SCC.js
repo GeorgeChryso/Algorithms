@@ -16,7 +16,7 @@ let Kosaraju=next=>{
         if(!seen.has(node)){
             seen.add(node)
             if(T[node])//change if children array
-                for(let nei of T[node])
+                for(let nei of T[node]) // Add any Unprocessed child to component
                     dfs(nei,component)
             component.push(node)
         }
@@ -25,6 +25,14 @@ let Kosaraju=next=>{
         if(!seen.has(node))
             SCC.push([]),
             dfs(node,SCC[SCC.length-1])
+    
+    // alternative result as a list of numbers
+    let res={}
+    for(let i=0;i<SCC.length;i++)
+        for(let node of SCC[i])
+            res[node]=i
+    console.log(res)
+
     return SCC
 }
 let topoSortDFS=next=>{
