@@ -183,6 +183,7 @@ console.log(HungarianAssignmentMinimization(example4))
 //RETURNS [Matching[j]=i, minCost]
 // N<=M
 // Takes O(N*N*M)
+// IF YOU HAVE TO MAXIMIZE THE COST INSTEAD, USE NEGATIVE EDGES AND RETURN THE NEGATIVE RESULT
 let HunFast=(GRAPH)=>{
     let a=[...Array(GRAPH.length)].map((d,i)=>[...GRAPH[i]])
     let A=(len)=>[...Array(len)].map(d=>0)

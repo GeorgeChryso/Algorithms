@@ -107,33 +107,32 @@ let LCA=(root,adj,queries,n)=>{
 
 // Strict Binary Lifting => O(nlogn preprocessing) + O(logn queries)
 let LCA=(root,adj,queries,n)=>{
-    let adj=[...Array(n)].map(d=>[]),ancestor=[...Array(n)].map(d=>new Object),
-        timeEntered=[...Array(n)],timeExited=[...Array(n)],
-        time=0
+    let adj=[...Array(n)].map(d=>[]),m=Math.ceil(Math.log2(n)),
+        ancestor=[...Array(n)].map(d=>[...Array(m+1)])
+        timeEntered=[...Array(n)],timeExited=[...Array(n)],time=0
 
     let isAncestorOf=(a,b)=> (timeEntered[a]<=timeEntered[b] && timeExited[b]<=timeExited[a])
-    
-    let dfs=(node,stack=[],height=0)=>{
-        stack.push(node)
+
+    let dfs=(node,parent)=>{
         timeEntered[node]=time++
-        ancestor[node][0]=node
-        for(let i=0;stack.length-1- (1<<i) >=0;i++)
-            ancestor[node][1<<i]=stack[stack.length-1-(1<<i)]
-        for(let nei of adj[node])
-            dfs(nei,stack,height+1)
-        stack.pop()
+        ancestor[node][0]=parent
+        // essentially means to go up 2**bit => go up 2**(bit-1)+ another 2**(bit-1) 
+        for(let bit=1;bit<=m;bit++)
+            ancestor[node.val][bit]=ancestor[ ancestor[node.val][bit-1] ] [bit-1]
+        for(let child of adj[node])
+            dfs(child,node)
         timeExited[node]=time++
     }
-    dfs(root)      
+    dfs(root,root)      
     let LCA=(a,b)=>{
         if(isAncestorOf(a,b) || isAncestorOf(b,a))
             return timeEntered[a]<timeEntered[b]?a:b
         //essentially means find the highest ancestor of a that is not an ancestor of b
         // the LCA will have to be the previous of that node.
-        for(let bit=Math.ceil( Math.log2(n));bit>=0;bit--)
-            if( ancestor[a][1<<bit]!==undefined && !isAncestorOf(ancestor[a][1<<bit],b))
-                a=ancestor[a][1<<bit]
-        return ancestor[a][1]
+        for(let bit=m;bit>=0;bit--)
+            if(!isAncestorOf(ancestor[a][bit],b))
+                a=ancestor[a][bit]
+        return ancestor[a][0]
     }
     return queries.map( ([u,v])=>LCA(u,v))
 }
