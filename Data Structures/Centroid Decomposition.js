@@ -9,70 +9,102 @@
 // INPUT IS DIRECTED, works for undirected input aswell ( no rooted tree)
 // adj[node]=[...children]   (adj.length ==== n) 
 let adj,n,root // INPUTS
-//example
+//examples
 adj=[ [1],[2,4,8],[5,3],[7,10],[],[6],[],[],[9],[],[11],[12],[]],n=13,root=0
+adj=[[1,10],[2,7],[3,4],[],[5,6],[],[],[8],[9],[],[11],[12],[]]
 
 
-let m=Math.ceil(Math.log2(n)),depth=[...Array(n)],subtreeSize=[...Array(n)],
-    ancestor=[...Array(n)].map(d=>[...Array(m+1)]),
-    isCentroid=[...Array(n)].map(d=>false),
-    timeEntered=[...Array(n)],timeExited=[...Array(n)],time=0
-depth[root]=0
-let DepthLCAdfs=(node,parent)=>{
-    ancestor[node][0]=parent
-    for(let bit=1;bit<=m;bit++)
-        ancestor[node][bit]=ancestor[ancestor[node][bit-1]] [bit-1]
-    timeEntered[node]=time++
-    for(let child of adj[node])
-        if(child!==parent)
-            depth[child]=depth[node]+1,
-            DepthLCAdfs(child,node)    
-    timeExited[node]=time++
+
+// In the centroid tree, what I achieve is:
+// for every node X in the original tree, every node in the neighborhood of X 
+// is a child of X in the centroid tree.
+// A node adjacent to the neighborhood of X in the original Tree 
+// is a Parent of X in the centroid tree
+
+
+class CentroidDecomposition{
+    constructor(adj,n,root=0){
+        this.adj=adj,this.n=n,this.root=root
+        this.m=Math.ceil(Math.log2(n)),this.depth=[...Array(n)],this.subtreeSize=[...Array(n)],
+        this.ancestor=[...Array(n)].map(d=>[...Array(this.m+1)]),
+        this.isCentroid=[...Array(n)].map(d=>false),
+        this.timeEntered=[...Array(n)],this.timeExited=[...Array(n)],this.time=0
+        this.depth[root]=0
+        this.DepthLCAdfs(root,root)
+
+        // this.adj2=this.adj //////////////////////////IF ITS ALREADY BIDIRECTIONAL
+        this.adj2=[...Array(n)].map(d=>[])
+        for(let i=0;i<n;i++)
+            for(let child of adj[i])
+                this.adj2[child].push(i),
+                this.adj2[i].push(child)
+        this.DepthLCAdfs(root,root)
+        this.subTreeSizesDFS(root,null)
+        this.decoParent=[...Array(n)],
+        this.adjD=[...Array(n)].map(d=>[]), //the NEW GRAPH after Decomposition (directed)
+        this.newDecoRoot=this.findCentroidsDFS(root,null,n)
+
+        // PROBLEM SPECIFIC
+        this.isMarked=[...Array(n)].map(d=>false)
+        this.closestMarkedNode=[...Array(n)] //in the Centroid Tree
+        this.closestMarkedNodeDist=[...Array(n)].map(d=>Infinity)
+    }   
+    // INTERNALS    
+    DepthLCAdfs=(node,parent)=>{
+        this.ancestor[node][0]=parent
+        for(let bit=1;bit<=this.m;bit++)
+        this.ancestor[node][bit]=this.ancestor[this.ancestor[node][bit-1]] [bit-1]
+        this.timeEntered[node]=this.time++
+        for(let child of this.adj[node])
+            if(child!==parent)
+                this.depth[child]=this.depth[node]+1,
+                this.DepthLCAdfs(child,node)    
+        this.timeExited[node]=this.time++
+    }
+    isAncestorOf=(a,b)=> (this.timeEntered[a]<=this.timeEntered[b] && this.timeExited[b]<=this.timeExited[a])
+    LCA=(a,b)=>{
+        if(this.isAncestorOf(a,b) || this.isAncestorOf(b,a))
+            return this.timeEntered[a]<this.timeEntered[b]?a:b
+        //essentially means find the highest ancestor of a that is not an ancestor of b
+        // the LCA will have to be the previous of that node.
+        for(let bit=this.m;bit>=0;bit--)
+            if(!isAncestorOf(this.ancestor[a][bit],b))
+                a=this.ancestor[a][bit]
+        return this.ancestor[a][0]
+    }
+    //(count of edges betweeen 2 nodes)
+    distance=(node1,node2)=>this.depth[node1]+this.depth[node2]-2*this.depth[this.LCA(node1,node2)]
+    subTreeSizesDFS=(node,parent)=>{
+        this.subtreeSize[node]=1
+        for(let child of this.adj2[node])
+            if(child!==parent&&!this.isCentroid[child])
+                this.subtreeSize[node]+=this.subTreeSizesDFS(child,node)
+        return this.subtreeSize[node]
+    }
+    // O(nlogn)
+    findCentroidsDFS=(node,cparent,totalNodes,parent)=>{
+        for(let child of this.adj2[node])//find and return the centroid of this path
+            if(!this.isCentroid[child]&&this.subtreeSize[child]>Math.floor(totalNodes/2)&&child!==parent)
+                return this.findCentroidsDFS(child,cparent,totalNodes,node)
+        //if no centroid was found, the current node is the centroid
+        this.isCentroid[node]=true,this.decoParent[node]=cparent
+        for(let child of this.adj2[node])
+            if (!this.isCentroid[child]) //find the centroids of the children subtrees
+                this.subTreeSizesDFS(child,node),
+                this.adjD[node].push(this.findCentroidsDFS(child,node,this.subtreeSize[child],node))
+        return node
+    }
+
+    //mark a node 
+    pointUpdate(node){
+
+    }
+    //find the closest marked node to node 
+    nodeQuery(node){
+
+    }
 }
-let isAncestorOf=(a,b)=> (timeEntered[a]<=timeEntered[b] && timeExited[b]<=timeExited[a])
-let LCA=(a,b)=>{
-    if(isAncestorOf(a,b) || isAncestorOf(b,a))
-        return timeEntered[a]<timeEntered[b]?a:b
-    //essentially means find the highest ancestor of a that is not an ancestor of b
-    // the LCA will have to be the previous of that node.
-    for(let bit=m;bit>=0;bit--)
-        if(!isAncestorOf(ancestor[a][bit],b))
-            a=ancestor[a][bit]
-    return ancestor[a][0]
-}
-//(count of edges betweeen 2 nodes)
-let distance=(node1,node2)=>depth[node1]+depth[node2]-2*depth[LCA(node1,node2)]
-//make the EDGES 2 BIDIRECTIONAL.  
-//////////DELETE AND REPLACE WITH ADJ IF ITS ALREADY BIDIRECTIONAL
-let adj2=[...Array(n)].map(d=>[])
-for(let i=0;i<n;i++)
-    for(let child of adj[i])
-        adj2[child].push(i),
-        adj2[i].push(child)
-// adj2=adj //////////////////////////IF ITS BIDIRECTIONAL
-let subTreeSizesDFS=(node,parent)=>{
-    subtreeSize[node]=1
-    for(let child of adj2[node])
-        if(child!==parent&&!isCentroid[child])
-            subtreeSize[node]+=subTreeSizesDFS(child,node)
-    return subtreeSize[node]
-}
-// O(nlogn)
-let findCentroidsDFS=(node,cparent,totalNodes,parent)=>{
-    for(let child of adj2[node])//find and return the centroid of this path
-        if(!isCentroid[child]&&subtreeSize[child]>Math.floor(totalNodes/2)&&child!==parent)
-            return findCentroidsDFS(child,cparent,totalNodes,node)
-    //if no centroid was found, the current node is the centroid
-    isCentroid[node]=true,decoParent[node]=cparent
-    for(let child of adj2[node])
-        if (!isCentroid[child]) //find the centroids of the children subtrees
-            subTreeSizesDFS(child,node),
-            adjD[node].push(findCentroidsDFS(child,node,subtreeSize[child],node))
-    return node
-}
-DepthLCAdfs(root,root)
-subTreeSizesDFS(root,null)
-let decoParent=[...Array(n)],
-    adjD=[...Array(n)].map(d=>[]), //the NEW GRAPH after Decomposition (directed)
-    newDecoRoot=findCentroidsDFS(root,null,n)
-console.log(newDecoRoot,LCA(5,6))
+
+let CD=new CentroidDecomposition(adj,13,0)
+
+console.log(CD.newDecoRoot)
