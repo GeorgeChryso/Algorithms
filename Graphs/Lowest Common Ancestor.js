@@ -118,7 +118,7 @@ let LCA=(root,adj,queries,n)=>{
         ancestor[node][0]=parent
         // essentially means to go up 2**bit => go up 2**(bit-1)+ another 2**(bit-1) 
         for(let bit=1;bit<=m;bit++)
-            ancestor[node.val][bit]=ancestor[ ancestor[node.val][bit-1] ] [bit-1]
+            ancestor[node][bit]=ancestor[ ancestor[node][bit-1] ] [bit-1]
         for(let child of adj[node])
             dfs(child,node)
         timeExited[node]=time++
