@@ -35,7 +35,8 @@ let binExp=(x,n,mod=BigInt(1e9+7))=>{
     return Number(result)
 }
 console.log(binExp(2,8))
-
+//bigint 2
+const powmod = (a, b, mod=BigInt(1e9+7)) => { let r = 1n;a=BigInt(a),b=BigInt(b);while (b > 0n) { if (b % 2n == 1) r = r * a % mod; b >>= 1n; a = a * a % mod; } return r; };
 
 let matrixMult=(A,B,mod=1e9+7)=>{
     let n1=A.length,m1=A[0].length,n2=B.length,m2=B[0].length

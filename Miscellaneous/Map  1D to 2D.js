@@ -9,10 +9,10 @@ let Numberto2D=(x,n,m)=>[(x/m)>>0,x-m*i]//[i,j]
 
 //So if i want to map a cell of a nXm matrix to a number
 let pairtoNumber=(i,j,n,m)=>{
-    return i*m+j
+    return (i-1)*m+(j-1)+1
 }
 
 
-console.log(Numberto2D(
-    25,1,2
+console.log(pairtoNumber(
+    3,2,3,5
 ))

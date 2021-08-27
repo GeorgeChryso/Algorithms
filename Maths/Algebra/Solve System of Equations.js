@@ -45,9 +45,10 @@ let SLAE=(AB)=>{
 
 
 //solution [1, [2,1,-2]]
-let example=[[2, -3, 1,-1],
+let example=[
+[2, -3, 1,-1],
 [1, -1, 2,-3],
-[3, 1, -1,9]]
+[3, 1, -1, 9]]
 console.log(SLAE(example))
 
 // Infinite Solutions
@@ -66,5 +67,10 @@ let example3=[
 ]
 console.log(SLAE(example3))
 
+let example4=[
+    [1,0,0],
+    [0,1,0],
+    [1,1,0]
+]
 
-
+console.log(SLAE(example4))

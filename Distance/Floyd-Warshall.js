@@ -63,6 +63,24 @@ let FloydWarshall=(source,target,edges,n)=>{
 
 
 
+// Example=> count the number of distinct paths from [0,n-1] that have the shortest distance
+var countPaths = function(n, edges) {
+    let SD=[...Array(n)].map(d=>[...Array(n)].map(d=>Infinity)),mod=1e9+7,
+        numWays=[...Array(n)].map((d,i)=>[...Array(n)].map( (d,j)=>Number(i===j)))
+    for(let [f,t,v]   of  edges)
+        SD[f][t]=SD[t][f]=v,
+        numWays[t][f]=numWays[f][t]=1
+    // SD[i][j] Shortest Distance from i-j
+    for(let k=0;k<n;k++) //middle node
+        for(let i=0;i<n;i++) //from
+            for(let j=i+1;j<n;j++) //to 
+                if(SD[i][j]>SD[i][k]+SD[k][j])
+                    SD[i][j]=SD[j][i]=SD[i][k]+SD[k][j],
+                    numWays[i][j]=numWays[j][i]=(numWays[i][k]*numWays[k][j])%mod
+                else if( SD[i][j]===SD[i][k]+SD[k][j])
+                    numWays[i][j]=numWays[j][i]= (numWays[i][j]+numWays[i][k]*numWays[k][j])%mod    
+    return numWays[0][n-1]
+};
 
 console.log(FloydWarshall(
     'A','E',

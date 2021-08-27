@@ -105,7 +105,7 @@ console.log('abc'-'abb')
 
 
 // OK COMPLEXITY
-class MaxHeap {
+class BinaryHeap {
   constructor(comparator=null) {
     this.data=[]
     this.comparator = (a, b) => b - a; // Modify this

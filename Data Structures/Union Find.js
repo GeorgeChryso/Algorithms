@@ -21,7 +21,7 @@ class UnionFind {
         //put every element into its own group
         // rooted at itself
         for (let i = 0; i < size; i++) {
-            this.groupSize[i]=i     
+            this.groupSize[i]=1 
             this.parent[i]=i            
         }
     }
@@ -109,12 +109,13 @@ class DS {
       return true;
     }
     sameGroup=(A,B)=>this.find(A)==this.find(B)
+    sizeOfGroup=A=>this.rank[this.find(A)]
   }
 
 
   //object based uniion find
   class DS {
-    constructor(n) {
+    constructor() {
       this.id = {}
       this.rank = {}  //numComponents
     }
@@ -146,6 +147,7 @@ class DS {
       return true;
     }
     sameGroup=(A,B)=>this.find(A)==this.find(B)
+    sizeOfGroup=A=>this.rank[this.find(A)]
   }
 
 

@@ -1,61 +1,32 @@
 
-
-// unidirectional input
-// src='A', Target='C', distances=[[A,B,1], [A,C,0],[C,K,2],...]
-var dijkstrass=(src,Target,distances)=>{
-
-    //source: [distances[i]]
-    let connections={}
-    //key:node name, val: its dist from source node
-    let finalizedDist={}
-    let sptSet=new Set() //all the nodes,whose minimum distance from source
-    // is finalized.
-
-    console.log(src,Target,distances)
-    for (const [source,tar,cost] of distances) {
-         connections[source]==undefined?connections[source]=[[source,tar,cost]]:connections[source].push([source,tar,cost])
-         finalizedDist[source]=Infinity    //populate distance for n nodes
-         finalizedDist[tar]=Infinity
+// O(|E|+|V|logV)
+var dijkstras=(n,source,target,edges)=>{
+    let adj=[...Array(n)].map(d=>[]),
+        minD=[...Array(n)].map(d=>Infinity), // min distance from source
+        pq=new minBinaryHeap((a,b)=>a[1]-b[1]), //[node,minDistFromSource]
+        visited=[...Array(n)].map(d=>false)
+    //create adjacency
+    for(let [f,t,val] of edges)
+        adj[f].push([t,val]),
+        adj[t].push([f,val]) //remove if directed
+    //run dijkstras
+    pq.push([source,0])
+    minD[source]=0
+    while(pq.length()){
+        let [node,minDfromSource]=pq.poll()
+        if(visited[node])
+            continue
+        visited[node]=true
+        for(let [nei,cost] of adj[node])
+            if(minD[nei]>minDfromSource+cost)
+                minD[nei]=minDfromSource+cost,
+                pq.push([nei,minD[nei]])
     }
- 
-    let priorityQueue=new minBinaryHeap()
-    priorityQueue.comparator=(a,b)=>a[2]-b[2]
-
-    priorityQueue.push([src,src,0])
-    finalizedDist[src]=0
-
-  
-    let totalNodes=Object.keys(connections).length
-    console.log(connections)
-    while(sptSet.size!==totalNodes){
-        let currentElement=priorityQueue.poll()
-        while(sptSet.has(currentElement[1])&&priorityQueue.heap.length!==0){
-            currentElement=priorityQueue.poll()
-        }
-        sptSet.add(currentElement[1])
-
-        for (const [cur,to,cost] of connections[currentElement[1]]) {
-            if(finalizedDist[cur]+cost<finalizedDist[to]){
-                finalizedDist[to]=finalizedDist[cur]+cost
-                priorityQueue.push([cur,to,finalizedDist[cur]+cost])
-
-            }
-        }
-        
-         //stop early optimization, If the target node is processed I can end it as the distance is not going to change
-        // BUT, THE REST OF THE NODES ARE NOT OPTIMIZED
-        // if(currentElement[0]===Target)return finalizedDist[Target]
-    }
-
-    return finalizedDist[Target]
+    return minD[target]
 }
-
-
-
-
 //minHeap
 class minBinaryHeap{
-    constructor(){
+    constructor(c){
         this.heap=[]
         //this is the simplest comparator between a and b and returns 
         // a positive number if a >b
@@ -63,7 +34,7 @@ class minBinaryHeap{
         // or 0 when a ===b, 
         // adjusting this for every situation will allow me to use heaps outside of the 
         // just numbers context
-        this.comparator=(a,b)=>a-b
+        this.comparator=c
     }
 
     hasParent=index=>index>=1
@@ -144,138 +115,53 @@ class minBinaryHeap{
 }
 
 
-// O(|E|+|V|logV)
-// Keep track of the path aswell
-var dijkstras=(src,Target,distances)=>{
 
-    //source: [distances[i]]
-    let connections={}
-    //key:node name, val: its dist from source node
-    let finalizedDist={}
-    let prev={}
-    let sptSet=new Set() //all the nodes,whose minimum distance from source
-    // is finalized.
-
-    console.log(src,Target,distances)
-    for (const [source,tar,cost] of distances) {
-         connections[source]==undefined?connections[source]=[[source,tar,cost]]:connections[source].push([source,tar,cost])
-         connections[tar]==undefined?connections[tar]=[[tar,source,cost]]:connections[source].push([tar,source,cost])
-         finalizedDist[source]=Infinity    //populate distance for n nodes
-         finalizedDist[tar]=Infinity
-         prev[source]=Infinity
-         prev[tar]=Infinity
-    }
- 
-    let priorityQueue=new minBinaryHeap()
-    priorityQueue.comparator=(a,b)=>a[2]-b[2]
-
-    priorityQueue.push([src,src,0])
-    finalizedDist[src]=0
-
-  
-    let totalNodes=Object.keys(connections).length
-
-    while(priorityQueue.length()&&sptSet.size<totalNodes){
-        let currentElement=priorityQueue.poll()
-        while(sptSet.has(currentElement[1])&&priorityQueue.heap.length!==0){
-            currentElement=priorityQueue.poll()
-        }
-        sptSet.add(currentElement[1])
-
-        for (const [cur,to,cost] of connections[currentElement[1]]) {
-            if(finalizedDist[cur]+cost<finalizedDist[to]){
-                finalizedDist[to]=finalizedDist[cur]+cost
-                prev[to]=cur
-                priorityQueue.push([cur,to,finalizedDist[cur]+cost])
-
-            }
-        }
-
-        //stop early optimization, If the target node is processed I can end it as the distance is not going to change
-        // BUT, THE REST OF THE NODES ARE NOT OPTIMIZED
-        // if(currentElement[0]===Target)return finalizedDist[Target]
-    }
-
-    //actually, I m essentially reversing the order of the previous array starting from my target
-    let findPath=()=>{
-        if(finalizedDist[Target]==Infinity)return false
-
-        let path=[Target]
-        let currkey=Target
-        while(prev[currkey]!=Infinity){
-            path.unshift(prev[currkey])
-            currkey=prev[currkey]
-        }
-        return path
-    }
-
-    console.log(findPath())
-    console.log(finalizedDist)
-    return finalizedDist[Target]
+// O( V**2 ) for DENSE GRAPHS 
+var dijkstrasDENSE=(n,source,target,edges)=>{
+    let adj=[...Array(n)].map(d=>[...Array(n)].map(d=>Infinity)),
+        minD=[...Array(n)].map(d=>Infinity) // min distance from source
+    //create adjacency
+    for(let [f,t,val] of edges)
+        adj[f][t]=val,
+        adj[t][f]=val //remove if directed
+    minD[source]=0
+    for(let i=0;i<n;i++) //try to better minD[j] by going through i
+        for(let j=0;j<n;j++)
+            if(minD[j]>minD[i]+adj[i][j])
+                minD[j]=minD[i]+adj[i][j]
+    return minD[target]
 }
 
 
 
-console.log(dijkstras(
-    'A','E',
-        [   
-            ['A','B',7],
-            ['A','C',9],
-            ['A','F',14],
-            ['B','C',10],
-            ['B','D',15],
-            ['C','B',10],
-            ['C','D',11],
-            ['C','F',2],
-            ['D','B',15],
-            ['D','E',6],
-            ['D','C',11],
-            ['E','D',6],
-            ['E','F',9],
-            ['F','E',9],
-            ['F','C',2],
-            ['F','A',14]
-        ]
+
+// count number of Paths from [0,n-1] with the MINIMUM DISTANCE
+var countPaths = function(n, edges) {
+    let adj=[...Array(n)].map(d=>[]),mod=1e9+7,pq=new BinaryHeap(),
+        minD=[...Array(n)].map((d,i)=>i?Infinity:0),
+        numWays=[...Array(n)].map((d,i)=>0),
+        visited=[...Array(n)].map(d=>false)
     
-))
-
-
-
-// O(n^2) Dijkstra's
-// find the shortest distance from a source to every other node
-
-// Regular Dijkstars" O( (M+N)logN)
-
-//But if we have a complete graph this deteriorates to O(N^2LOGN)
-
-
-
-// Store the candidate distance to every node
-// The distance to adj node is the distance themselves
-// look at all the nodes and fix the distances, the next node is the adj node that's closest
-let example=[[0,1,4,3],
-            [1,0,1,1],
-            [4,1,0,1],
-            [3,1,1,0]]
-//O(n^2) 
-let dijkstrasO=(adj,source)=>{
-    let n=adj.length,distanceFromSource=[...Array(n)].map(d=>Infinity),
-        resultDistanceFromSource=[...Array(n)].map(d=>Infinity)
-    distanceFromSource[source]=0
-    for(let k=0;k<n;k++){
-        //find the node with the minimum distance from source that's NOT finalized
-        let minNode,minDist=Infinity
-        for(let i=0;i<n;i++)
-            if(resultDistanceFromSource[i]===Infinity && distanceFromSource[i]<minDist)
-                minNode=i,minDist=distanceFromSource[i]
-        if(minDist===Infinity)
-            break
-        resultDistanceFromSource[minNode]=minDist// finalize it 
-        //make neighbors available
-        for(let nei=0;nei<n;nei++)
-            distanceFromSource[nei]=Math.min(distanceFromSource[nei],minDist+adj[minNode][nei])
-        distanceFromSource[minNode]=minNode
+    for(let [f,t,v] of edges)
+        adj[Number(f)].push([Number(t),Number(v)]),
+        adj[Number(t)].push([Number(f),Number(v)])
+    
+    numWays[0]=1
+    pq.push([0,0]) 
+    while(pq.length()){
+        let [node,v]=pq.poll()
+        if(visited[node])
+            continue
+        visited[node]=true
+        for(let [nei,val] of adj[node])
+            if(minD[nei]>minD[node]+val)
+                minD[nei]=minD[node]+val,
+                numWays[nei]=numWays[node],
+                pq.push([nei,minD[node]+val])
+            else if(minD[nei]===minD[node]+val)
+                numWays[nei]= (numWays[nei]+numWays[node])%mod
     }
-    return resultDistanceFromSource
+    return numWays[n-1]
 }
-console.log(dijkstrasO(example,0))
+
+

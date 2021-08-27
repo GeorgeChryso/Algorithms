@@ -38,16 +38,17 @@ class CentroidDecomposition{
             for(let child of adj[i])
                 this.adj2[child].push(i),
                 this.adj2[i].push(child)
+        // PROBLEM SPECIFIC
+        this.isMarked=[...Array(n)].map(d=>false)
+        this.closestMarkedNode=[...Array(n)] //in the Centroid Tree
+        this.closestMarkedNodeDist=[...Array(n)].map(d=>Infinity)
+        /////////////////////////////////
         this.DepthLCAdfs(root,root)
         this.subTreeSizesDFS(root,null)
         this.decoParent=[...Array(n)],
         this.adjD=[...Array(n)].map(d=>[]), //the NEW GRAPH after Decomposition (directed)
         this.newDecoRoot=this.findCentroidsDFS(root,null,n)
-
-        // PROBLEM SPECIFIC
-        this.isMarked=[...Array(n)].map(d=>false)
-        this.closestMarkedNode=[...Array(n)] //in the Centroid Tree
-        this.closestMarkedNodeDist=[...Array(n)].map(d=>Infinity)
+     
     }   
     // INTERNALS    
     DepthLCAdfs=(node,parent)=>{
@@ -68,7 +69,7 @@ class CentroidDecomposition{
         //essentially means find the highest ancestor of a that is not an ancestor of b
         // the LCA will have to be the previous of that node.
         for(let bit=this.m;bit>=0;bit--)
-            if(!isAncestorOf(this.ancestor[a][bit],b))
+            if(!this.isAncestorOf(this.ancestor[a][bit],b))
                 a=this.ancestor[a][bit]
         return this.ancestor[a][0]
     }
@@ -94,17 +95,44 @@ class CentroidDecomposition{
                 this.adjD[node].push(this.findCentroidsDFS(child,node,this.subtreeSize[child],node))
         return node
     }
-
-    //mark a node 
+    ///////////////////////////////// EXTERNALS
+    // The whole idea is: 
+    // Any optimal answer(for example closest marked node) for a node X,
+    // not belonging to the neighborhood of X, 
+    // has to go through the parent of X (in the centroid tree)
+    // Each subtree in the centroid tree forms a connected component in the original tree
+    // mark a node- O(loglogn) 
     pointUpdate(node){
-
+        this.isMarked[node]=true,this.closestMarkedNode[node]=node
+        this.closestMarkedNodeDist[node]=0
+        let par=this.decoParent[node]
+        while(par!==null){
+            let d=this.distance(node,par)
+            if(this.closestMarkedNodeDist[par]>d)
+                this.closestMarkedNodeDist[par]=d,
+                this.closestMarkedNode[par]=node
+            par=this.decoParent[par]
+        }
     }
-    //find the closest marked node to node 
+    //find the closest marked node to node - O(loglogn) 
     nodeQuery(node){
-
+        let par=this.decoParent[node],
+            cdist=this.closestMarkedNodeDist[node],
+            cnode=this.closestMarkedNode[node]
+        while(par!==null){
+            let d=this.distance(node,par)
+            if(cdist>d+this.closestMarkedNodeDist[par])
+                cdist=d+this.closestMarkedNodeDist[par],
+                cnode=this.closestMarkedNode[par]
+            par=this.decoParent[par]
+        }
+        // closest marked node,distance to closest marked
+        return [ cnode,cdist]
     }
 }
 
 let CD=new CentroidDecomposition(adj,13,0)
 
-console.log(CD.newDecoRoot)
+console.log(CD.nodeQuery(0))
+CD.pointUpdate(4)
+console.log(CD.nodeQuery(3))
